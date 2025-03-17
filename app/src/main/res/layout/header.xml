@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+  >
+
+    <TextView
+        android:id="@+id/tvJobTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="freelance work"
+        android:textSize="24sp"
+        android:textColor="#212121"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvJobStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="In Progress"
+        android:textColor="#757575"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvProjectID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project ID: 1"
+        android:textColor="#757575"
+        android:layout_marginTop="4dp"/>
+
+    <Button
+        android:id="@+id/btnReopenJob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reopen Job"
+        android:textColor="#FFFFFF"
+        android:background="#2E7D32"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

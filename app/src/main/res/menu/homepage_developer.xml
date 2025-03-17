@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/Home"
+        android:orderInCategory="100"
+        android:title="Home"
+        android:icon="@drawable/home"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Profile"
+        android:orderInCategory="100"
+        android:title="Profile"
+        android:icon="@drawable/profilelogo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/findjob"
+        android:orderInCategory="100"
+        android:title="Find Job"
+        android:icon="@drawable/job_search"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/evaluate_project"
+        android:orderInCategory="100"
+        android:icon="@drawable/checklist"
+        android:title="Evaluate Project"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/chat"
+        android:orderInCategory="100"
+
+        android:title="Chatting"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/ContactUs"
+        android:orderInCategory="100"
+        android:title="Contact Us"
+        android:icon="@drawable/phone1"
+        app:showAsAction="never" />
+
+</menu>

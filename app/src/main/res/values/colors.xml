@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#1EB980</color>
+    <color name="active_step">#1EB980</color>
+
+    <color name="gray_300">#FFEEEEEE</color>
+    <color name="gray_600">#FF424242</color>
+    <color name="teal_700">#FF00796B</color>
+    <color name="teal_200">#FFB2DFDB</color>
+    <color name="red_600">#FFD32F2F</color>
+    <color name="red_300">#FFE57373</color>
+    <color name="status_chip_background">#1FFFFFFF</color>
+    <color name="colorPrimary">#FF6200EE</color>
+    <color name="colorSecondary">#FF00796B</color>
+    <color name="colorSurface">#FFFFFFFF</color>
+    <color name="colorOnSurface">#FF000000</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="teal_900">#FF004D40</color>
+
+
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#4CAF50</color>
+    <color name="colorReopenButton">#2E7D32</color>
+    <!-- Red color definitions (if used elsewhere) -->
+
+
+</resources>

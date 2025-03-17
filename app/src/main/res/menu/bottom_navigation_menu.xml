@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:iconTint="@color/black"
+        android:icon="@drawable/home"
+
+        />
+    <item
+        android:id="@+id/nav_jobs"
+        android:iconTint="@color/black"
+        android:icon="@drawable/ic_jobs"
+        />
+
+    <item
+        android:iconTint="@color/black"
+        android:id="@+id/nav_messages"
+        android:icon="@drawable/baseline_add_comment_24" />
+    <item
+        android:id="@+id/nav_profile"
+        android:iconTint="@color/black"
+        android:icon="@drawable/ic_profile" />
+
+</menu>

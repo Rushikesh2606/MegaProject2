@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Flagpole -->
+    <path
+        android:fillColor="@color/gray_300"
+        android:pathData="M4,2v20h2V2H4z"/>
+    <!-- Flag -->
+    <path
+        android:fillColor="@color/green"
+        android:pathData="M14,4V2H4v20h2v-8h8l-2,3h6V4h-4z"/>
+</vector>

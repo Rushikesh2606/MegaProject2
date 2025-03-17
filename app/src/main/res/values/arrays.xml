@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <!-- Job Categories Array with 30 items -->
+        <string-array name="job_categories">
+            <item>Web Development</item>
+            <item>Mobile Development</item>
+            <item>Graphic Design</item>
+            <item>Content Writing</item>
+            <item>Digital Marketing</item>
+            <item>Search Engine Optimization</item>
+            <item>Data Analysis</item>
+            <item>Project Management</item>
+            <item>Software Engineering</item>
+            <item>UI/UX Design</item>
+            <item>Cloud Computing</item>
+            <item>Cybersecurity</item>
+            <item>Database Administration</item>
+            <item>Quality Assurance</item>
+            <item>IT Support</item>
+            <item>Business Analysis</item>
+            <item>Network Administration</item>
+            <item>Product Management</item>
+            <item>Copywriting</item>
+            <item>Video Editing</item>
+            <item>Animation</item>
+            <item>Game Development</item>
+            <item>Artificial Intelligence</item>
+            <item>Machine Learning</item>
+            <item>Data Science</item>
+            <item>E-commerce</item>
+            <item>Customer Service</item>
+            <item>Virtual Assistance</item>
+            <item>Sales</item>
+            <item>Accounting</item>
+        </string-array>
+
+        <!-- Experience Levels Array (Years) with 30 items -->
+        <string-array name="experience_levels_array">
+            <item>0-1 years</item>
+            <item>1-2 years</item>
+            <item>2-3 years</item>
+            <item>3-4 years</item>
+            <item>4-5 years</item>
+            <item>5-6 years</item>
+            <item>6-7 years</item>
+            <item>7-8 years</item>
+            <item>8-9 years</item>
+            <item>9-10 years</item>
+            <item>10-11 years</item>
+            <item>11-12 years</item>
+            <item>12-13 years</item>
+            <item>13-14 years</item>
+            <item>14-15 years</item>
+            <item>15-16 years</item>
+            <item>16-17 years</item>
+            <item>17-18 years</item>
+            <item>18-19 years</item>
+            <item>19-20 years</item>
+            <item>20-21 years</item>
+            <item>21-22 years</item>
+            <item>22-23 years</item>
+            <item>23-24 years</item>
+            <item>24-25 years</item>
+            <item>25-26 years</item>
+            <item>26-27 years</item>
+            <item>27-28 years</item>
+            <item>28-29 years</item>
+            <item>29+ years</item>
+        </string-array>
+
+        <!-- Experience Levels Descriptive Array with 30 items -->
+        <string-array name="experience_levels">
+            <item>Experience Level 1</item>
+            <item>Experience Level 2</item>
+            <item>Experience Level 3</item>
+            <item>Experience Level 4</item>
+            <item>Experience Level 5</item>
+            <item>Experience Level 6</item>
+            <item>Experience Level 7</item>
+            <item>Experience Level 8</item>
+            <item>Experience Level 9</item>
+            <item>Experience Level 10</item>
+            <item>Experience Level 11</item>
+            <item>Experience Level 12</item>
+            <item>Experience Level 13</item>
+            <item>Experience Level 14</item>
+            <item>Experience Level 15</item>
+            <item>Experience Level 16</item>
+            <item>Experience Level 17</item>
+            <item>Experience Level 18</item>
+            <item>Experience Level 19</item>
+            <item>Experience Level 20</item>
+            <item>Experience Level 21</item>
+            <item>Experience Level 22</item>
+            <item>Experience Level 23</item>
+            <item>Experience Level 24</item>
+            <item>Experience Level 25</item>
+            <item>Experience Level 26</item>
+            <item>Experience Level 27</item>
+            <item>Experience Level 28</item>
+            <item>Experience Level 29</item>
+            <item>Experience Level 30</item>
+        </string-array>
+
+        <!-- Location Preferences Array -->
+        <string-array name="location_preferences">
+
+            <item>New York</item>
+            <item>Los Angeles</item>
+            <item>Chicago</item>
+            <item>Houston</item>
+            <item>Phoenix</item>
+            <item>Philadelphia</item>
+            <item>San Antonio</item>
+            <item>San Diego</item>
+            <item>Dallas</item>
+            <item>San Jose</item>
+        </string-array>
+
+        <!-- Budget Types Array -->
+        <string-array name="budget_types">
+
+            <item>Fixed Price</item>
+            <item>Hourly</item>
+            <item>Milestone Based</item>
+            <item>Retainer</item>
+        </string-array>
+
+        <!-- Project Visibility Options Array -->
+        <string-array name="project_visibility_options">
+
+            <item>Public</item>
+            <item>Private</item>
+            <item>Unlisted</item>
+        </string-array>
+
+        <!-- Countries Array -->
+        <string-array name="countries">
+
+            <item>United States</item>
+            <item>Canada</item>
+            <item>United Kingdom</item>
+            <item>Australia</item>
+            <item>Germany</item>
+            <item>France</item>
+            <item>India</item>
+            <item>China</item>
+            <item>Japan</item>
+            <item>Brazil</item>
+            <item>South Africa</item>
+            <item>Italy</item>
+            <item>Spain</item>
+            <item>Mexico</item>
+            <item>Russia</item>
+            <item>Netherlands</item>
+            <item>Sweden</item>
+            <item>Switzerland</item>
+            <item>Norway</item>
+            <item>New Zealand</item>
+        </string-array>
+
+
+
+</resources>
+
