@@ -4,10 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +24,7 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
     private List<JobController> allJobs = new ArrayList<>();
     private List<JobController> filteredJobs = new ArrayList<>();
     private JobAdapter adapter;
+    private DatabaseReference databaseReference;
     private JobAdapter.OnJobCloseListener closeListener;
 
     public static JobFragment newInstance(String filter, JobAdapter.OnJobCloseListener listener) {
@@ -34,12 +43,8 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
             filter = getArguments().getString("filter");
         }
 
-        // Initialize sample data
-        allJobs.add(new JobController("freelance work", "2025-03-02 17:37:49", "In Progress", 0));
-        allJobs.add(new JobController("React Developer", "2025-03-03 08:43:55", "In Progress", 0));
-        allJobs.add(new JobController("Video Editor", "2025-03-05 07:37:27", "In Progress", 0));
-        allJobs.add(new JobController("Mobile Developer", "2025-03-06 12:38:27", "Open", 2));
-        allJobs.add(new JobController("Web Project", "2025-02-05 12:38:27", "Completed", 20));
+        // Initialize Firebase reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("jobs");
     }
 
     @Override
@@ -49,35 +54,50 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        filterJobs();
         adapter = new JobAdapter(filteredJobs, this);
         recyclerView.setAdapter(adapter);
 
+        fetchJobsFromFirebase();
+
         return view;
+    }
+
+    private void fetchJobsFromFirebase() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allJobs.clear();
+                for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
+                    JobController job = jobSnapshot.getValue(JobController.class);
+                    if (job != null) {
+                        allJobs.add(job);
+                    }
+                }
+                filterJobs();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load jobs: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void filterJobs() {
         filteredJobs.clear();
         for (JobController job : allJobs) {
-            if ("All".equalsIgnoreCase(filter)) {
-                filteredJobs.add(job);
-            } else if (job.getStatus().equalsIgnoreCase(filter)) {
+            if ("All".equalsIgnoreCase(filter) || job.getStatus().equalsIgnoreCase(filter)) {
                 filteredJobs.add(job);
             }
         }
     }
 
     public void handleJobClosed(int position) {
-        if (position >= 0 && position < allJobs.size()) {
-            // Remove from main list
-            JobController removedJob = allJobs.remove(position);
-
-            // Remove from filtered list if present
-            int filteredPosition = filteredJobs.indexOf(removedJob);
-            if (filteredPosition != -1) {
-                filteredJobs.remove(filteredPosition);
-                adapter.notifyItemRemoved(filteredPosition);
-            }
+        if (position >= 0 && position < filteredJobs.size()) {
+            JobController removedJob = filteredJobs.remove(position);
+            adapter.notifyItemRemoved(position);
+            allJobs.remove(removedJob);
         }
     }
 
@@ -89,7 +109,6 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
         handleJobClosed(position);
     }
 
-    // For updating data from outside
     public void updateJobs(List<JobController> newJobs) {
         allJobs.clear();
         allJobs.addAll(newJobs);
