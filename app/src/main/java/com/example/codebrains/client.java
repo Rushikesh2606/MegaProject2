@@ -4,6 +4,7 @@ public class client {
     String firstName;
     String lastName;
     String email;
+    long timestamp;
 String profession;
     String password;
     String country;
@@ -13,6 +14,14 @@ String profession;
 
     public int getTotal_jobs() {
         return total_jobs;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public void setTotal_jobs(int total_jobs) {
@@ -88,6 +97,7 @@ String profession;
         this.in_progress = in_progress;
         this.completed = completed;
         this.total_jobs = total_jobs;
+        this.timestamp =0;
     }
 
     public client() {

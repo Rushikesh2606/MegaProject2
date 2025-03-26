@@ -6,6 +6,7 @@ public class freelancer {
             skills, tagLine, tools, yearsOfExperience, firstName, lastName,
             email, password, country, username, dob, contactNo, gender;
     int total_jobs, in_progress, completed, pending;
+    long timestamp;
 
     public freelancer() {
     }
@@ -41,6 +42,15 @@ public class freelancer {
         this.in_progress = in_progress;
         this.completed = completed;
         this.total_jobs = total_jobs;
+        this.timestamp=0;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getGender() {

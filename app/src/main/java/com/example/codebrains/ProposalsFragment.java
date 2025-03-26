@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class ProposalsFragment extends Fragment {
 
     private List<Proposal> getSampleData() {
         List<Proposal> list = new ArrayList<>();
-        list.add(new Proposal("sam", "23212424", 4.9f, "I have extensive experience in web development...", "$500.00"));
-        list.add(new Proposal("rushi", "23212424", 4.9f, "I'm a professional developer...", "$200.00"));
+        list.add(new Proposal("sam", "23212424", 4.9f, "I have extensive experience in web development...", "$500.00", "job123", "proposal1",""));
+        list.add(new Proposal("rushi", "23212424", 4.9f, "I'm a professional developer...", "$200.00", "job123", "proposal2",""));
         return list;
     }
 }

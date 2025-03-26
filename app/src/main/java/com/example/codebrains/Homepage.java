@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.codebrains.messaging.Chat;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -105,6 +107,19 @@ public class Homepage extends AppCompatActivity {
                     // Navigate to the Profile Fragment
                    Intent intent=new Intent(Homepage.this,JobpostingActivity.class);
                    startActivity(intent);
+
+                } else if (id==R.id.chat) {
+                    Intent i=new Intent(Homepage.this, Chat.class);
+                    startActivity(i);
+                }else if (id==R.id.appLogOut) {
+                    auth.signOut(); // Sign out from Firebase
+                    Toast.makeText(Homepage.this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
+
+                    // Redirect to Login Activity
+                    Intent intent = new Intent(Homepage.this, login.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
 
                 }
 

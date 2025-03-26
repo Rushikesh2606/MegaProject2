@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
+
+import com.example.codebrains.messaging.Chat;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -19,17 +22,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.codebrains.databinding.ActivityHomepageDeveloperBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Homepage_developer extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomepageDeveloperBinding binding;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomepageDeveloperBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        auth=FirebaseAuth.getInstance();
 
         setSupportActionBar(binding.appBarHomepageDeveloper.toolbar);
         binding.appBarHomepageDeveloper.fab.setOnClickListener(view -> {
@@ -76,7 +82,8 @@ public class Homepage_developer extends AppCompatActivity {
                     // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.chat) {
-                    // TODO: Handle chat manually or navigate to its destination.
+                   Intent i=new Intent(Homepage_developer.this,Chat.class);
+                   startActivity(i);
                     handled = true;
                 } else if (id == R.id.ContactUs) {
                     // Use the updated Contactus fragment with a no-argument constructor.
@@ -85,6 +92,16 @@ public class Homepage_developer extends AppCompatActivity {
                             .replace(R.id.nav_host_fragment_content_homepage_developer, contactusFragment)
                             .commit();
                     handled = true;
+                } else if (id==R.id.appLogOut) {
+                        auth.signOut(); // Sign out from Firebase
+                        Toast.makeText(Homepage_developer.this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
+
+                        // Redirect to Login Activity
+                        Intent intent = new Intent(Homepage_developer.this, login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+
                 }
 
                 // Close the drawer after a selection is made.

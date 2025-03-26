@@ -28,8 +28,8 @@
     <item
         android:id="@+id/chat"
         android:orderInCategory="100"
-
-        android:title="Chatting"
+android:icon="@drawable/chat"
+        android:title="Chats"
         app:showAsAction="never" />
     <item
         android:id="@+id/ContactUs"
@@ -37,5 +37,9 @@
         android:title="Contact Us"
         android:icon="@drawable/phone1"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/appLogOut"
+        android:icon="@drawable/logout_1"
+        android:title="Contact Us" />
 
 </menu>
