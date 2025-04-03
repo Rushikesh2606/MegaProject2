@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        else if(profession.equals("freelancer")) {
+            else if(profession.equals("freelancer")) {
                 Intent i=new Intent(MainActivity.this,Homepage_developer.class);
                 startActivity(i);
                 finish();

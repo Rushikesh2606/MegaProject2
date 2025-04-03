@@ -32,7 +32,18 @@ public class MainActivity2 extends AppCompatActivity {
             finish();  // Close MainActivity2 since we’re redirecting the user.
             return;
         }
-
+// After checking role in MainActivity2's onCreate()
+        if (!role.isEmpty()) {
+            if (role.equals("Client")) {
+                startActivity(new Intent(MainActivity2.this, Homepage.class));
+            } else if (role.equals("Freelancer")) {
+                startActivity(new Intent(MainActivity2.this, Homepage_developer.class));
+                // Start notification service for developers
+                startService(new Intent(this, JobNotificationService.class));
+            }
+            finish();
+            return;
+        }
         // No stored role: show the welcome screen.
         setContentView(R.layout.activity_main2);
 

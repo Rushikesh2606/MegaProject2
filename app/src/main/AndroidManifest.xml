@@ -7,6 +7,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -28,11 +29,21 @@
         android:theme="@style/Theme.CodeBrains"
         tools:targetApi="31">
         <activity
+            android:name=".payment1"
+            android:exported="false" />
+
+        <service
+            android:name=".JobNotificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <activity
             android:name=".messaging.Chat"
             android:exported="false" />
-        <activity android:name=".messaging.ChatDetails"
-            android:exported="false"/>
-
+        <activity
+            android:name=".messaging.ChatDetails"
+            android:exported="false" />
         <activity
             android:name=".Job_View_Details"
             android:exported="false" />
@@ -70,9 +81,9 @@
         <activity
             android:name=".freelancer.freelancer_register"
             android:exported="false" />
-        <activity android:name=".freelancer.FindjobActivity"
-            android:exported="false"
-            />
+        <activity
+            android:name=".freelancer.FindjobActivity"
+            android:exported="false" />
         <activity
             android:name=".register"
             android:exported="false" />

@@ -1,5 +1,8 @@
 package com.example.codebrains;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -124,6 +127,13 @@ public class developer_profile extends Fragment {
                     completed.setText(String.valueOf(freelancer.getCompleted()));
                     pending.setText(String.valueOf(freelancer.getPending()));
                     welcome.setText("Welcome , "+freelancer.getFirstName());
+
+                    SharedPreferences sp = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("developer_skills", freelancer.getSkills());
+                    editor.apply();
+
+
                     // Hide progress bar & show profile content
                     progressBar.setVisibility(View.GONE);
                     scrollView.setVisibility(View.VISIBLE);

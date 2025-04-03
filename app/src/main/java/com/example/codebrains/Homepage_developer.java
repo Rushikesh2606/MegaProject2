@@ -5,10 +5,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.Toast;
-
-import com.example.codebrains.freelancer.FindjobActivity;
-import com.example.codebrains.messaging.Chat;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -23,20 +19,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.codebrains.databinding.ActivityHomepageDeveloperBinding;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class Homepage_developer extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomepageDeveloperBinding binding;
-    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomepageDeveloperBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        auth=FirebaseAuth.getInstance();
 
         setSupportActionBar(binding.appBarHomepageDeveloper.toolbar);
         binding.appBarHomepageDeveloper.fab.setOnClickListener(view -> {
@@ -44,7 +37,8 @@ public class Homepage_developer extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
+        Intent serviceIntent = new Intent(this, JobNotificationService.class);
+        startService(serviceIntent);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
@@ -73,17 +67,17 @@ public class Homepage_developer extends AppCompatActivity {
                 } else if (id == R.id.Home) {
                     navController.navigate(R.id.nav_home);
                     handled = true;
-                }else if (id == R.id.findjob) {
-                    // Redirect to FindJobActivity instead of fragment
-                    Intent intent = new Intent(Homepage_developer.this, FindjobActivity.class);
-                    startActivity(intent);
+                } else if (id == R.id.findjob) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.nav_host_fragment_content_homepage_developer, new HomeFragment());
+                    ft.commit();
                     handled = true;
-                }else if (id == R.id.evaluate_project) {
+                } else if (id == R.id.evaluate_project) {
                     // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.chat) {
-                   Intent i=new Intent(Homepage_developer.this,Chat.class);
-                   startActivity(i);
+                    // TODO: Handle chat manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.ContactUs) {
                     // Use the updated Contactus fragment with a no-argument constructor.
@@ -92,21 +86,6 @@ public class Homepage_developer extends AppCompatActivity {
                             .replace(R.id.nav_host_fragment_content_homepage_developer, contactusFragment)
                             .commit();
                     handled = true;
-                } else if (id==R.id.appLogOut) {
-                    auth.signOut();
-
-                    // Clear SharedPreferences (ensures no session data is stored)
-                    getSharedPreferences("MyPrefs", MODE_PRIVATE).edit().clear().apply();
-
-                    // Delay logout to ensure session is fully cleared
-                    new android.os.Handler().postDelayed(() -> {
-                        // Restart the app to clear session cache
-                        Intent intent = new Intent(Homepage_developer.this, login.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    }, 500);
-
                 }
 
                 // Close the drawer after a selection is made.

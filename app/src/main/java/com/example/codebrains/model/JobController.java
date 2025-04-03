@@ -17,6 +17,8 @@ public class JobController {
     private String status;
     private int noOfBidsReceived;
     private String postedDate;
+    private long postedTimestamp; // Added timestamp field
+
 
     // Default constructor
     public JobController() {}
@@ -46,6 +48,8 @@ public class JobController {
         this.jobTitle = title;
         this.postedDate = date;
         this.noOfBidsReceived = bids;
+        this.postedTimestamp = System.currentTimeMillis(); // Set timestamp
+
     }
 
     public JobController(String attachments, String jobDescription, String jobCategory, String jobTitle, String username, String id,String status) {
@@ -56,6 +60,8 @@ public class JobController {
         this.username = username;
         this.id = id;
         this.status=status;
+        this.postedTimestamp = System.currentTimeMillis(); // Set timestamp
+
     }
 
     // Getters and Setters
@@ -178,4 +184,13 @@ public class JobController {
     public void setPostedDate(String postedDate) {
         this.postedDate = postedDate;
     }
+    public long getPostedTimestamp() {
+        return postedTimestamp;
+    }
+    public void setPostedTimestamp(long postedTimestamp) {
+        this.postedTimestamp = postedTimestamp;
+    }
+
+
+
 }
