@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.codebrains.job.JobDetailsFragment;
+
 public class JobpostingActivity extends AppCompatActivity {
 
     private View step1, step2, step3, step4;

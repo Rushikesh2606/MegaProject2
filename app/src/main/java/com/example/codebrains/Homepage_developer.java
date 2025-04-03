@@ -93,14 +93,19 @@ public class Homepage_developer extends AppCompatActivity {
                             .commit();
                     handled = true;
                 } else if (id==R.id.appLogOut) {
-                        auth.signOut(); // Sign out from Firebase
-                        Toast.makeText(Homepage_developer.this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
+                    auth.signOut();
 
-                        // Redirect to Login Activity
+                    // Clear SharedPreferences (ensures no session data is stored)
+                    getSharedPreferences("MyPrefs", MODE_PRIVATE).edit().clear().apply();
+
+                    // Delay logout to ensure session is fully cleared
+                    new android.os.Handler().postDelayed(() -> {
+                        // Restart the app to clear session cache
                         Intent intent = new Intent(Homepage_developer.this, login.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
+                    }, 500);
 
                 }
 

@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.codebrains.job.JobAdapter;
+import com.example.codebrains.job.JobFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 

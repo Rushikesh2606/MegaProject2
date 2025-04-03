@@ -108,4 +108,11 @@ public class signup extends AppCompatActivity {
 
         });
     }
+    @Override
+    public void onBackPressed() {
+        Intent i=new Intent(signup.this,MainActivity2.class);
+        startActivity(i);
+        super.onBackPressed();
+
+    }
 }

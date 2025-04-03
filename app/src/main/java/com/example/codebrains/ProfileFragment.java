@@ -143,7 +143,15 @@ ScrollView scroll;
 
     }
 
-
+    public void handleBackPress() {
+        // Handle the back press logic here
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            // If there are no more fragments in the back stack, let the Activity handle the back press
+            getActivity().onBackPressed();
+        }
+    }
     private String getValidString(String value) {
         return value != null ? value : "N/A";
     }

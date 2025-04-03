@@ -6,11 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.codebrains.JobController;
+import com.example.codebrains.model.JobController;
 import com.example.codebrains.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,20 +67,26 @@ public class CategoryFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<JobController> jobs = new ArrayList<>();
-                for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
-                    JobController job = jobSnapshot.getValue(JobController.class);
-                    if (job != null) {
-                        job.setId(jobSnapshot.getKey());
-                        jobs.add(job);
+                if (snapshot.exists()) {
+                    List<JobController> jobs = new ArrayList<>();
+                    for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
+                        JobController job = jobSnapshot.getValue(JobController.class);
+                        if (job != null) {
+                            job.setId(jobSnapshot.getKey());
+                            jobs.add(job);
+                        }
                     }
+                    adapter.setJobs(jobs);
+                } else {
+                    // No data found
+                    Log.d("CategoryFragment", "No jobs found for category: " + category);
                 }
-                adapter.setJobs(jobs);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle error
+                Log.e("CategoryFragment", "Failed to read jobs", error.toException());
             }
         });
     }
@@ -86,7 +94,7 @@ public class CategoryFragment extends Fragment {
     private void setupClickListener() {
         adapter.setOnItemClickListener(job -> {
             Intent intent = new Intent(getActivity(), JobDetailActivity.class);
-            intent.putExtra("JOB_DETAILS", job);
+            intent.putExtra("JOB_ID", job.getId());
             startActivity(intent);
         });
     }

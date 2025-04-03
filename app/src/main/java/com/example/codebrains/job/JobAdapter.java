@@ -1,4 +1,4 @@
-package com.example.codebrains;
+package com.example.codebrains.job;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +11,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.List;
 
-import kotlinx.coroutines.Job;
+import com.example.codebrains.Job_View_Details;
+import com.example.codebrains.R;
+import com.example.codebrains.model.JobController;
+
+import java.util.List;
 
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
     private List<JobController> jobs;

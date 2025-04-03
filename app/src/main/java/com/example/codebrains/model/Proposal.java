@@ -1,4 +1,4 @@
-package com.example.codebrains;
+package com.example.codebrains.model;
 
 public class Proposal {
     private String name;

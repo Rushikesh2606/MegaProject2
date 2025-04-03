@@ -1,6 +1,5 @@
-package com.example.codebrains;
+package com.example.codebrains.freelancer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,22 +8,27 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+import com.example.codebrains.MainActivity2;
+import com.example.codebrains.R;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import com.example.codebrains.model.Freelancer;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.codebrains.register;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class Freelancer_register extends AppCompatActivity {
+public class freelancer_register extends AppCompatActivity {
     private static final int PICK_FILE_REQUEST = 100;
 
     TextView file_name, uploaded;
@@ -36,7 +40,6 @@ public class Freelancer_register extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,7 @@ public class Freelancer_register extends AppCompatActivity {
 
                     // Retrieving Data from Bundle
                     String desc = bundle.getString("Desc");
-                    Toast.makeText(Freelancer_register.this, desc, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(freelancer_register.this, desc, Toast.LENGTH_SHORT).show();
                     String skills = bundle.getString("skills");
                     String tagLine = bundle.getString("tagLine");
                     String tools = bundle.getString("Tools");
@@ -110,17 +113,17 @@ public class Freelancer_register extends AppCompatActivity {
                                                 if (saveTask.isSuccessful()) {
                                                     Log.d("FREELANCER_REGISTER", "User Data Saved Successfully!");
                                                     auth.signOut();
-                                                    Intent i = new Intent(Freelancer_register.this, MainActivity2.class);
+                                                    Intent i = new Intent(freelancer_register.this, MainActivity2.class);
                                                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(i);
                                                     finish();
                                                 } else {
-                                                    Toast.makeText(Freelancer_register.this, "Error in saving user data", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(freelancer_register.this, "Error in saving user data", Toast.LENGTH_SHORT).show();
                                                     Log.e("FREELANCER_REGISTER", "Error: " + saveTask.getException().getMessage());
                                                 }
                                             });
                                 } else {
-                                    Toast.makeText(Freelancer_register.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(freelancer_register.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     Log.e("FREELANCER_REGISTER", "Authentication Failed: " + task.getException().getMessage());
                                 }
                             });
@@ -169,7 +172,6 @@ public class Freelancer_register extends AppCompatActivity {
     }
 
     // Extract File Name from URI
-    @SuppressLint("Range")
     private String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -213,5 +215,13 @@ public class Freelancer_register extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i=new Intent(freelancer_register.this, register.class);
+        startActivity(i);
+        super.onBackPressed();
+
     }
 }

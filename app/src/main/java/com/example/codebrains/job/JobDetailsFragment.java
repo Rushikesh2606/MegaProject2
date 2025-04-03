@@ -1,4 +1,4 @@
-package com.example.codebrains;
+package com.example.codebrains.job;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +19,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.codebrains.R;
+import com.example.codebrains.SkillsFragment;
+import com.example.codebrains.model.JobController;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
@@ -201,7 +201,7 @@ public class JobDetailsFragment extends Fragment {
                                 jobCategoryAutoComplete.getText().toString(),
                                 jobTitleEdit.getText().toString(),
                                 Uid,
-                                id
+                                id,"Open"
                         );
 
                         if (id != null) {

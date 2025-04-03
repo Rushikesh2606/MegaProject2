@@ -10,7 +10,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.codebrains.Freelancer_register;
 import com.example.codebrains.R;
 
 public class freelancer_form1 extends AppCompatActivity {
@@ -56,7 +55,7 @@ public class freelancer_form1 extends AppCompatActivity {
                     bundle.putString("Years_of_experience", calendertext.getText().toString());
 
                     // Navigate to Freelancer_register activity
-                    Intent i = new Intent(freelancer_form1.this, Freelancer_register.class);
+                    Intent i = new Intent(freelancer_form1.this, freelancer_register.class);
                     i.putExtras(bundle);
                     startActivity(i);
                     // Optionally call finish() to remove freelancer_form1 from the back stack

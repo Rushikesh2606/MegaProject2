@@ -27,31 +27,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CodeBrains"
         tools:targetApi="31">
-
-        <!-- Add FindjobActivity declaration here -->
-        <activity
-            android:name=".freelancer.FindjobActivity"
-            android:label="Find Jobs"
-            android:parentActivityName=".Homepage_developer"
-            android:exported="true">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Homepage_developer" />
-        </activity>
-
-        <!-- Keep existing activities below -->
         <activity
             android:name=".messaging.Chat"
             android:exported="false" />
-        <activity
-            android:name=".messaging.ChatDetails"
+        <activity android:name=".messaging.ChatDetails"
             android:exported="false"/>
 
         <activity
             android:name=".Job_View_Details"
             android:exported="false" />
         <activity
-            android:name=".JobActivity"
+            android:name=".job.JobActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BidActivity"
+            android:exported="false" />
+        <activity
+            android:name=".freelancer.JobDetailActivity"
             android:exported="false" />
         <activity
             android:name=".JobpostingActivity"
@@ -76,8 +68,11 @@
             android:name=".freelancer.freelancer_form1"
             android:exported="false" />
         <activity
-            android:name=".Freelancer_register"
+            android:name=".freelancer.freelancer_register"
             android:exported="false" />
+        <activity android:name=".freelancer.FindjobActivity"
+            android:exported="false"
+            />
         <activity
             android:name=".register"
             android:exported="false" />
@@ -98,8 +93,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

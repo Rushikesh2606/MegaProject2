@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.codebrains.job.JobActivity;
 import com.example.codebrains.messaging.Chat;
 import com.google.android.material.navigation.NavigationView;
 

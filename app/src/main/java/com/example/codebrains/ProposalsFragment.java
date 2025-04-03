@@ -9,27 +9,59 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.codebrains.model.Proposal;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProposalsFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private ProposalsAdapter proposalsAdapter;
+    private List<Proposal> proposalsList;
+    private DatabaseReference proposalsRef;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_proposals, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new ProposalsAdapter(getSampleData()));
+
+        proposalsList = new ArrayList<>();
+        proposalsAdapter = new ProposalsAdapter(proposalsList);
+        recyclerView.setAdapter(proposalsAdapter);
+
+        proposalsRef = FirebaseDatabase.getInstance().getReference("Proposals");
+
+        fetchProposals();
 
         return view;
     }
 
-    private List<Proposal> getSampleData() {
-        List<Proposal> list = new ArrayList<>();
-        list.add(new Proposal("sam", "23212424", 4.9f, "I have extensive experience in web development...", "$500.00", "job123", "proposal1",""));
-        list.add(new Proposal("rushi", "23212424", 4.9f, "I'm a professional developer...", "$200.00", "job123", "proposal2",""));
-        return list;
+    private void fetchProposals() {
+        proposalsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                proposalsList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Proposal proposal = snapshot.getValue(Proposal.class);
+                    if (proposal != null) {
+                        proposalsList.add(proposal);
+                    }
+                }
+                proposalsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors.
+            }
+        });
     }
 }

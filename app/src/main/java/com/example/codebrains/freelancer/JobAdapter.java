@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.codebrains.JobController;
+import com.example.codebrains.model.JobController;
 import com.example.codebrains.R;
 import java.util.List;
 

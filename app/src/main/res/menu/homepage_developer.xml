@@ -40,6 +40,6 @@ android:icon="@drawable/chat"
     <item
         android:id="@+id/appLogOut"
         android:icon="@drawable/logout_1"
-        android:title="Contact Us" />
+        android:title="Log Out" />
 
 </menu>
