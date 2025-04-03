@@ -33,7 +33,7 @@
             android:maxWidth="270dp"
             android:minWidth="50dp"
             android:text="sender"
-            android:textColor="@color/black"
+            android:textColor="@color/colorSurface"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/appSenderTime"
             app:layout_constraintEnd_toStartOf="@id/guideLine"

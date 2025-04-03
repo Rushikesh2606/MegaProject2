@@ -36,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -268,7 +267,7 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
                 Log.d("FirebaseData", snapshot.toString());
 
                 // Map data to Freelancer object
-                freelancer freelancer = snapshot.getValue(freelancer.class);
+                Freelancer freelancer = snapshot.getValue(Freelancer.class);
 
                 if (freelancer != null && getActivity() != null) {
                     first_name.setText(getValidString(freelancer.getFirstName()));

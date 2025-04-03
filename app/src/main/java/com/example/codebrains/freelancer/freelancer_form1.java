@@ -1,4 +1,4 @@
-package com.example.codebrains;
+package com.example.codebrains.freelancer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -9,7 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.example.codebrains.Freelancer_register;
+import com.example.codebrains.R;
 
 public class freelancer_form1 extends AppCompatActivity {
 

@@ -1,7 +1,9 @@
 package com.example.codebrains;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class JobController {
+public class JobController implements Parcelable {
     private String id;
     private String username;
     private String jobTitle;
@@ -21,11 +23,12 @@ public class JobController {
     // Default constructor
     public JobController() {}
 
-    // Parameterized constructor
-    public JobController(String id, String username, String jobTitle, String jobCategory, String jobDescription,
-               String primarySkill, String additionalSkills, String experienceLevel, double budget,
-               String deadline, String attachments, String additionalQuestions, String status,
-               int noOfBidsReceived, String postedDate) {
+    // Full parameterized constructor
+    public JobController(String id, String username, String jobTitle, String jobCategory,
+                         String jobDescription, String primarySkill, String additionalSkills,
+                         String experienceLevel, double budget, String deadline,
+                         String attachments, String additionalQuestions, String status,
+                         int noOfBidsReceived, String postedDate) {
         this.id = id;
         this.username = username;
         this.jobTitle = jobTitle;
@@ -42,6 +45,8 @@ public class JobController {
         this.noOfBidsReceived = noOfBidsReceived;
         this.postedDate = postedDate;
     }
+
+    // Simplified constructor 1
     public JobController(String title, String date, String status, int bids) {
         this.jobTitle = title;
         this.postedDate = date;
@@ -49,133 +54,115 @@ public class JobController {
         this.noOfBidsReceived = bids;
     }
 
-    public JobController(String attachments, String jobDescription, String jobCategory, String jobTitle, String username, String id) {
+    // Simplified constructor 2
+    public JobController(String attachments, String jobDescription, String jobCategory,
+                         String jobTitle, String username, String id) {
         this.attachments = attachments;
         this.jobDescription = jobDescription;
         this.jobCategory = jobCategory;
         this.jobTitle = jobTitle;
         this.username = username;
         this.id = id;
+    }
+
+    // Parcelable implementation
+    protected JobController(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        jobTitle = in.readString();
+        jobCategory = in.readString();
+        jobDescription = in.readString();
+        primarySkill = in.readString();
+        additionalSkills = in.readString();
+        experienceLevel = in.readString();
+        budget = in.readDouble();
+        deadline = in.readString();
+        attachments = in.readString();
+        additionalQuestions = in.readString();
+        status = in.readString();
+        noOfBidsReceived = in.readInt();
+        postedDate = in.readString();
+    }
+
+    public static final Creator<JobController> CREATOR = new Creator<JobController>() {
+        @Override
+        public JobController createFromParcel(Parcel in) {
+            return new JobController(in);
+        }
+
+        @Override
+        public JobController[] newArray(int size) {
+            return new JobController[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(username);
+        dest.writeString(jobTitle);
+        dest.writeString(jobCategory);
+        dest.writeString(jobDescription);
+        dest.writeString(primarySkill);
+        dest.writeString(additionalSkills);
+        dest.writeString(experienceLevel);
+        dest.writeDouble(budget);
+        dest.writeString(deadline);
+        dest.writeString(attachments);
+        dest.writeString(additionalQuestions);
+        dest.writeString(status);
+        dest.writeInt(noOfBidsReceived);
+        dest.writeString(postedDate);
     }
 
     // Getters and Setters
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getJobTitle() { return jobTitle; }
+    public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getJobCategory() { return jobCategory; }
+    public void setJobCategory(String jobCategory) { this.jobCategory = jobCategory; }
 
-    public String getJobTitle() {
-        return jobTitle;
-    }
+    public String getJobDescription() { return jobDescription; }
+    public void setJobDescription(String jobDescription) { this.jobDescription = jobDescription; }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
+    public String getPrimarySkill() { return primarySkill; }
+    public void setPrimarySkill(String primarySkill) { this.primarySkill = primarySkill; }
 
-    public String getJobCategory() {
-        return jobCategory;
-    }
+    public String getAdditionalSkills() { return additionalSkills; }
+    public void setAdditionalSkills(String additionalSkills) { this.additionalSkills = additionalSkills; }
 
-    public void setJobCategory(String jobCategory) {
-        this.jobCategory = jobCategory;
-    }
+    public String getExperienceLevel() { return experienceLevel; }
+    public void setExperienceLevel(String experienceLevel) { this.experienceLevel = experienceLevel; }
 
-    public String getJobDescription() {
-        return jobDescription;
-    }
+    public double getBudget() { return budget; }
+    public void setBudget(double budget) { this.budget = budget; }
 
-    public void setJobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
-    }
+    public String getDeadline() { return deadline; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
 
-    public String getPrimarySkill() {
-        return primarySkill;
-    }
+    public String getAttachments() { return attachments; }
+    public void setAttachments(String attachments) { this.attachments = attachments; }
 
-    public void setPrimarySkill(String primarySkill) {
-        this.primarySkill = primarySkill;
-    }
+    public String getAdditionalQuestions() { return additionalQuestions; }
+    public void setAdditionalQuestions(String additionalQuestions) { this.additionalQuestions = additionalQuestions; }
 
-    public String getAdditionalSkills() {
-        return additionalSkills;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setAdditionalSkills(String additionalSkills) {
-        this.additionalSkills = additionalSkills;
-    }
+    public int getNoOfBidsReceived() { return noOfBidsReceived; }
+    public void setNoOfBidsReceived(int noOfBidsReceived) { this.noOfBidsReceived = noOfBidsReceived; }
 
-    public String getExperienceLevel() {
-        return experienceLevel;
-    }
-
-    public void setExperienceLevel(String experienceLevel) {
-        this.experienceLevel = experienceLevel;
-    }
-
-    public double getBudget() {
-        return budget;
-    }
-
-    public void setBudget(double budget) {
-        this.budget = budget;
-    }
-
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(String attachments) {
-        this.attachments = attachments;
-    }
-
-    public String getAdditionalQuestions() {
-        return additionalQuestions;
-    }
-
-    public void setAdditionalQuestions(String additionalQuestions) {
-        this.additionalQuestions = additionalQuestions;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getNoOfBidsReceived() {
-        return noOfBidsReceived;
-    }
-
-    public void setNoOfBidsReceived(int noOfBidsReceived) {
-        this.noOfBidsReceived = noOfBidsReceived;
-    }
-
-    public String getPostedDate() {
-        return postedDate;
-    }
-
-    public void setPostedDate(String postedDate) {
-        this.postedDate = postedDate;
-    }
+    public String getPostedDate() { return postedDate; }
+    public void setPostedDate(String postedDate) { this.postedDate = postedDate; }
 }

@@ -5,13 +5,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".messaging.ChatDetails"
-    android:background="@drawable/w4"
+    android:background="#F1F5F9"
     android:orientation="horizontal"
     android:id="@+id/appParent">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/appToolBarContainer">
+        android:id="@+id/appToolBarContainer"
+        android:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
@@ -19,8 +21,8 @@
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/menu"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            android:minHeight="?attr/actionBarSize"
-            >
+            android:background="#4F46E5"
+            android:minHeight="?attr/actionBarSize">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -32,63 +34,77 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="back"
                     android:src="@drawable/leftarrowwhite"
+                    android:padding="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.013"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/appProfilePic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/baseline_account_circle_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.028"
                     app:layout_constraintStart_toEndOf="@id/appBackArrow"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="12dp" />
 
-                <TextView
-                    android:id="@+id/appUserName"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="112dp"
-                    android:text="username"
-                    android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.263"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/appProfilePic"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/callButton">
+
+                    <TextView
+                        android:id="@+id/appUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="username"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/userStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Online"
+                        android:textColor="#E0E7FF"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/callButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@drawable/call"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="Call"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:layout_marginEnd="8dp"
                     android:src="@drawable/videocall"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="video C
-                    all"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/call"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView"
-                    app:layout_constraintHorizontal_bias="0.888"
-                    app:layout_constraintStart_toEndOf="@+id/appUserName"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="Call"
-                    />
+                    android:contentDescription="Video Call"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,36 +112,49 @@
         android:id="@+id/appChatRecyclerView"
         android:layout_above="@id/appLinear"
         android:layout_below="@id/appToolBarContainer"
-        />
+        android:clipToPadding="false"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/appLinear"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="5dp"
-        >
+        android:padding="8dp"
+        android:background="@android:color/white"
+        android:elevation="8dp">
+
+        <ImageButton
+            android:id="@+id/attachButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_add"
+            android:contentDescription="Attach"
+            app:tint="#64748B" />
 
         <EditText
             android:id="@+id/appMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:autofillHints="username,user-email"
-            android:background="@drawable/background_message"
+            android:background="@drawable/message_input_background"
             android:ems="10"
-            android:hint="enter_your_message_here"
+            android:hint="Type a message..."
             android:inputType="text"
             android:minHeight="48dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:textColorHint="#757575" />
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColorHint="#94A3B8" />
 
         <ImageButton
             android:layout_width="50dp"
@@ -133,9 +162,10 @@
             android:id="@+id/appSendButton"
             android:background="@drawable/send_background"
             android:contentDescription="send_message_button"
-            android:padding="5dp"
+            android:padding="12dp"
             android:src="@drawable/send_icon"
             tools:ignore="ImageContrastCheck" />
     </LinearLayout>
 
 </RelativeLayout>
+

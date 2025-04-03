@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow layer for triangle -->
     <item>
         <rotate
             android:fromDegrees="45"
             android:pivotX="100%"
             android:pivotY="0%"
-            android:toDegrees="0" >
+            android:toDegrees="0">
             <shape android:shape="rectangle">
-                <solid android:color="#AFF3D3" />
+                <solid android:color="#40000000" />
+                <size android:width="18dp" android:height="18dp" />
             </shape>
         </rotate>
     </item>
-    <item android:right="8dp">
-        <shape android:shape="rectangle" >
-            <solid android:color="#AFF3D3" />
-            <corners android:radius="10dp" />
+
+    <!-- Shadow for main bubble -->
+    <item android:right="8dp" android:top="1dp" android:left="1dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#40000000" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- Triangle pointer -->
+    <item android:right="2dp">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="100%"
+            android:pivotY="0%"
+            android:toDegrees="0">
+            <shape android:shape="rectangle">
+                <gradient
+                    android:startColor="#3D62E0"
+                    android:endColor="#456FFF"
+                    android:angle="135" />
+                <size android:width="16dp" android:height="16dp" />
+            </shape>
+        </rotate>
+    </item>
+
+    <!-- Main bubble body -->
+    <item android:right="10dp" android:top="1dp" android:left="1dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#456FFF"
+                android:centerColor="#5A80FF"
+                android:endColor="#6B8DFF"
+                android:angle="135" />
+            <corners android:radius="12dp" />
+            <stroke android:color="#3D62E0" android:width="1dp" />
         </shape>
     </item>
 </layer-list>

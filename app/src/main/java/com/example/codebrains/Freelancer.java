@@ -1,6 +1,6 @@
 package com.example.codebrains;
 
-public class freelancer {
+public class Freelancer {
     // Corrected field names (match Firebase keys)
     String profession, desc, passout, degree, language, institute, availability,
             skills, tagLine, tools, yearsOfExperience, firstName, lastName,
@@ -8,10 +8,10 @@ public class freelancer {
     int total_jobs, in_progress, completed, pending;
     long timestamp;
 
-    public freelancer() {
+    public Freelancer() {
     }
 
-    public freelancer(String profession, String desc, String passout, String degree,
+    public Freelancer(String profession, String desc, String passout, String degree,
                       String language, String institute, String availability,
                       String skills, String tagLine, String tools,
                       String yearsOfExperience, String firstName, String lastName,

@@ -30,7 +30,8 @@ public class AIchatbot extends AppCompatActivity {
         });
 
         binding.buttonSend.setOnClickListener(v -> {
-            String query = binding.inputPrompt.getText().toString().trim();
+            String query="In this we are registering clients and developers. In which we are providing feature for clients to post their job requests on our website with information and  developers are able to bid on that jobs. Every time client post jobs it sends notification to the mail of developer with same skills taken by developer while registration. Client can decide the best developer for his job based on skills and experience. In this process first payment is taken from client and when developer completes his job and client approves then the payment sent to the developer. Also we are incorporating  feature for project analysis. Which analyses project provided by developer and generate report. And also client can rate the developer.   this is  freelance website and android app freelance platform which have name 'CODEBRAINS' . analyze our platform and give me answoer of the following question i ask to you the question is : ";
+             query = query + binding.inputPrompt.getText().toString().trim();
 
             if (query.isEmpty()) {
                 Toast.makeText(this, "Please enter a prompt!", Toast.LENGTH_SHORT).show();

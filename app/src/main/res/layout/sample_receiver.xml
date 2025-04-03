@@ -13,12 +13,12 @@
         android:id="@+id/appReceiverText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="12dp"
         android:maxWidth="270dp"
         android:minWidth="58dp"
         android:text="text"
-        android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textColor="#1E293B"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/appReceiverTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline"
@@ -29,16 +29,14 @@
         android:id="@+id/appReceiverTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="6dp"
         android:text="time"
-        android:textColor="#676767"
+        android:textColor="#64748B"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -47,3 +45,4 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="5dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+

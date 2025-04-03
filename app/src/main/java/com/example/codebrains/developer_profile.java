@@ -108,7 +108,7 @@ public class developer_profile extends Fragment {
                 Log.d("FirebaseData", snapshot.toString());
 
                 // Map data to Freelancer object
-                freelancer freelancer = snapshot.getValue(freelancer.class);
+                Freelancer freelancer = snapshot.getValue(Freelancer.class);
 
                 if (freelancer != null && getActivity() != null) {
                     name.setText(getValidString(freelancer.getFirstName()) + " " + getValidString(freelancer.getLastName()));

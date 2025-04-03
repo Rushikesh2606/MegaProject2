@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.example.codebrains.freelancer.FindjobActivity;
 import com.example.codebrains.messaging.Chat;
 
 import com.google.android.material.navigation.NavigationView;
@@ -72,13 +73,12 @@ public class Homepage_developer extends AppCompatActivity {
                 } else if (id == R.id.Home) {
                     navController.navigate(R.id.nav_home);
                     handled = true;
-                } else if (id == R.id.findjob) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.nav_host_fragment_content_homepage_developer, new HomeFragment());
-                    ft.commit();
+                }else if (id == R.id.findjob) {
+                    // Redirect to FindJobActivity instead of fragment
+                    Intent intent = new Intent(Homepage_developer.this, FindjobActivity.class);
+                    startActivity(intent);
                     handled = true;
-                } else if (id == R.id.evaluate_project) {
+                }else if (id == R.id.evaluate_project) {
                     // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.chat) {
