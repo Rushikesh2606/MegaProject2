@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <set>
+            <!-- Decrease elevation when pressed -->
+            <objectAnimator
+                android:duration="100"
+                android:propertyName="translationZ"
+                android:valueTo="0dp"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_linear_in" />
+
+            <!-- Scale down when pressed for tactile feedback -->
+            <objectAnimator
+                android:duration="100"
+                android:propertyName="scaleX"
+                android:valueTo="0.95"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_linear_in" />
+
+            <objectAnimator
+                android:duration="100"
+                android:propertyName="scaleY"
+                android:valueTo="0.95"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_linear_in" />
+
+            <!-- Slight alpha change for visual feedback -->
+            <objectAnimator
+                android:duration="100"
+                android:propertyName="alpha"
+                android:valueTo="0.9"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_linear_in" />
+        </set>
+    </item>
+
+    <!-- Focused state -->
+    <item android:state_focused="true">
+        <set>
+            <!-- Higher elevation to indicate focus -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="translationZ"
+                android:valueTo="6dp"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/linear_out_slow_in" />
+
+            <!-- Subtle scale effect -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleX"
+                android:valueTo="1.02"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/linear_out_slow_in" />
+
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleY"
+                android:valueTo="1.02"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/linear_out_slow_in" />
+        </set>
+    </item>
+
+    <!-- Hovered state (for devices that support hover) -->
+    <item android:state_hovered="true">
+        <set>
+            <!-- Medium elevation for hover state -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="translationZ"
+                android:valueTo="4dp"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+
+            <!-- Subtle scale effect -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleX"
+                android:valueTo="1.01"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleY"
+                android:valueTo="1.01"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </set>
+    </item>
+
+    <!-- Default state (not pressed, not focused, not hovered) -->
+    <item>
+        <set>
+            <!-- Normal elevation -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="translationZ"
+                android:valueTo="2dp"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+
+            <!-- Normal scale -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleX"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="scaleY"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+
+            <!-- Full opacity -->
+            <objectAnimator
+                android:duration="200"
+                android:propertyName="alpha"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </set>
+    </item>
+</selector>

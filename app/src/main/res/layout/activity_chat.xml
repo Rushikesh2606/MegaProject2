@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#F3F4F6">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/chatToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#2C3E50"
-        android:elevation="4dp"
-        app:title="Conversations"
-        app:titleTextColor="#FFFFFF"
-        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        style="@android:style/Widget.Material.ProgressBar.Large" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:scrollbars="none"
-        android:background="@android:color/transparent" />
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/chatToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2C3E50"
+            android:elevation="4dp"
+            app:title="Conversations"
+            app:titleTextColor="#FFFFFF"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            style="@android:style/Widget.Material.ProgressBar.Large" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scrollbars="none"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newChatFab"
@@ -45,4 +50,4 @@
         app:tint="#ECF0F1"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

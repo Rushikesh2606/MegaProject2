@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <objectAnimator
+            android:duration="150"
+            android:propertyName="cardElevation"
+            android:valueTo="2dp"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/fast_out_slow_in" />
+    </item>
+    <item android:state_hovered="true">
+        <objectAnimator
+            android:duration="200"
+            android:propertyName="cardElevation"
+            android:valueTo="12dp"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/fast_out_slow_in" />
+    </item>
+    <item android:state_focused="true">
+        <objectAnimator
+            android:duration="200"
+            android:propertyName="cardElevation"
+            android:valueTo="10dp"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/fast_out_slow_in" />
+    </item>
+    <item>
+        <objectAnimator
+            android:duration="200"
+            android:propertyName="cardElevation"
+            android:valueTo="8dp"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/fast_out_slow_in" />
+    </item>
+</selector>
