@@ -3,11 +3,16 @@ package com.example.codebrains.freelancer;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -65,7 +70,7 @@ public class JobDetailActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> {
             if (jobId != null) {
                 Intent i = new Intent(JobDetailActivity.this, BidActivity.class);
-                i.putExtra("JOB_ID", jobId); // Fixed: added key
+                i.putExtra("JOB_ID", jobId);
                 startActivity(i);
             } else {
                 Toast.makeText(this, "Job ID not found", Toast.LENGTH_SHORT).show();
@@ -84,7 +89,6 @@ public class JobDetailActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     JobController job = snapshot.getValue(JobController.class);
                     if (job != null) {
-                        // Update UI with job details
                         title.setText(job.getJobTitle());
                         category.setText(job.getJobCategory());
                         description.setText(job.getJobDescription());
@@ -95,41 +99,27 @@ public class JobDetailActivity extends AppCompatActivity {
                     }
                 } else {
                     title.setText("Job not found");
-                    category.setText("");
-                    description.setText("");
-                    skills.setText("");
-                    budget.setText("");
-                    deadline.setText("");
-                    experience.setText("");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 title.setText("Error fetching job details");
-                category.setText("");
-                description.setText("");
-                skills.setText("");
-                budget.setText("");
-                deadline.setText("");
-                experience.setText("");
             }
         });
     }
 
+    @SuppressLint({"ObjectAnimatorBinding", "ClickableViewAccessibility"})
     private void animateViews() {
-        // Get references to views
         LinearLayout budgetDeadlineLayout = (LinearLayout) budget.getParent();
         CardView cardView = (CardView) title.getParent().getParent();
 
         View[] views = {title, category, description, budgetDeadlineLayout, skills, experience, btn};
 
-        // Set all views to be invisible initially
         for (View view : views) {
             view.setAlpha(0f);
         }
 
-        // Animate each view with a delay
         for (int i = 0; i < views.length; i++) {
             View view = views[i];
             view.animate()
@@ -142,23 +132,17 @@ public class JobDetailActivity extends AppCompatActivity {
                     .start();
         }
 
-        // Add ripple effect to the entire card when touched
         cardView.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                ObjectAnimator.ofFloat(v, "cardElevation", 8f, 16f)
-                        .setDuration(100)
-                        .start();
+                ObjectAnimator.ofFloat(v, "cardElevation", 8f, 16f).setDuration(100).start();
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                ObjectAnimator.ofFloat(v, "cardElevation", 16f, 8f)
-                        .setDuration(100)
-                        .start();
+                ObjectAnimator.ofFloat(v, "cardElevation", 16f, 8f).setDuration(100).start();
                 return false;
             }
             return false;
         });
 
-        // Add pulse animation to submit button
         ObjectAnimator pulseAnimation = ObjectAnimator.ofPropertyValuesHolder(
                 btn,
                 PropertyValuesHolder.ofFloat("scaleX", 1f, 1.05f, 1f),
