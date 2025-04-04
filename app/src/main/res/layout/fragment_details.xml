@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
     app:cardUseCompatPadding="true"
     android:stateListAnimator="@animator/card_scale_animator">
 
@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <!-- Header Section -->
+        <!-- Header Section with improved layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="Project Title"
                 android:textColor="#212121"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
@@ -38,58 +38,59 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0"
-                android:layout_marginEnd="12dp" />
+                android:layout_marginEnd="16dp" />
 
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_status_tag"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="Open"
                 android:textColor="#2E7D32"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Divider -->
+        <!-- Improved Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#E0E0E0" />
+            android:background="#EEEEEE" />
 
-        <!-- Job Description -->
+        <!-- Job Description with better readability -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Project Description that provides details about what the client is looking for. This can be a longer text that describes the requirements and expectations for the project."
-            android:textColor="#616161"
+            android:textColor="#424242"
             android:textSize="16sp"
-            android:lineSpacingExtra="6dp"
+            android:lineSpacingExtra="8dp"
             android:maxLines="3"
             android:ellipsize="end" />
 
-        <!-- Skills Section -->
+        <!-- Skills Section with better visual hierarchy -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skills Required"
                 android:textColor="#1976D2"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-medium" />
 
@@ -97,8 +98,8 @@
                 android:id="@+id/chipGroupSkills"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:chipSpacingHorizontal="8dp"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="10dp"
                 app:chipSpacingVertical="8dp">
 
                 <com.google.android.material.chip.Chip
@@ -106,50 +107,70 @@
                     android:layout_height="wrap_content"
                     android:text="React"
                     app:chipBackgroundColor="#E3F2FD"
-                    android:textColor="#1976D2" />
+                    android:textColor="#0D47A1"
+                    android:textStyle="bold"
+                    app:chipStrokeWidth="1dp"
+                    app:chipStrokeColor="#BBDEFB" />
 
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Node.js"
                     app:chipBackgroundColor="#E3F2FD"
-                    android:textColor="#1976D2" />
+                    android:textColor="#0D47A1"
+                    android:textStyle="bold"
+                    app:chipStrokeWidth="1dp"
+                    app:chipStrokeColor="#BBDEFB" />
 
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="UI/UX"
                     app:chipBackgroundColor="#E3F2FD"
-                    android:textColor="#1976D2" />
+                    android:textColor="#0D47A1"
+                    android:textStyle="bold"
+                    app:chipStrokeWidth="1dp"
+                    app:chipStrokeColor="#BBDEFB" />
 
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="API Integration"
                     app:chipBackgroundColor="#E3F2FD"
-                    android:textColor="#1976D2" />
+                    android:textColor="#0D47A1"
+                    android:textStyle="bold"
+                    app:chipStrokeWidth="1dp"
+                    app:chipStrokeColor="#BBDEFB" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
-        <!-- Project Details Grid -->
+        <!-- Project Details Grid with improved card-like appearance -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="24dp"
+            android:background="#F9F9F9"
+            android:padding="16dp"
+            android:elevation="2dp"
+            app:cornerRadius="12dp">
 
-            <!-- Budget -->
+            <!-- Budget with enhanced visual -->
             <LinearLayout
                 android:id="@+id/budgetContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:background="#F5F5F5"
+                android:padding="8dp"
+                android:elevation="1dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.47">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_money"
                     app:tint="#2E7D32"
                     android:contentDescription="Budget icon" />
@@ -162,22 +183,26 @@
                     android:textSize="16sp"
                     android:textColor="#2E7D32"
                     android:textStyle="bold"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="10dp" />
             </LinearLayout>
 
-            <!-- Deadline -->
+            <!-- Deadline with enhanced visual -->
             <LinearLayout
                 android:id="@+id/deadlineContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:background="#F5F5F5"
+                android:padding="8dp"
+                android:elevation="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.47">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_calendar"
                     app:tint="#C62828"
                     android:contentDescription="Deadline icon" />
@@ -190,23 +215,27 @@
                     android:textSize="16sp"
                     android:textColor="#C62828"
                     android:textStyle="bold"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="10dp" />
             </LinearLayout>
 
-            <!-- Bids -->
+            <!-- Bids with enhanced visual -->
             <LinearLayout
                 android:id="@+id/bidsContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:background="#F5F5F5"
+                android:padding="8dp"
+                android:elevation="1dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/budgetContainer"
-                android:layout_marginTop="16dp">
+                app:layout_constraintWidth_percent="0.47"
+                android:layout_marginTop="12dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_person"
                     app:tint="#EF6C00"
                     android:contentDescription="Bids icon" />
@@ -219,23 +248,27 @@
                     android:textSize="16sp"
                     android:textColor="#EF6C00"
                     android:textStyle="bold"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="10dp" />
             </LinearLayout>
 
-            <!-- Posted Date -->
+            <!-- Posted Date with enhanced visual -->
             <LinearLayout
                 android:id="@+id/postedContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:background="#F5F5F5"
+                android:padding="8dp"
+                android:elevation="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/deadlineContainer"
-                android:layout_marginTop="16dp">
+                app:layout_constraintWidth_percent="0.47"
+                android:layout_marginTop="12dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_clock"
                     app:tint="#546E7A"
                     android:contentDescription="Posted date icon" />
@@ -248,9 +281,23 @@
                     android:textSize="16sp"
                     android:textColor="#546E7A"
                     android:textStyle="bold"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="10dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Added Action Button Section -->
+        <Button
+            android:id="@+id/btnApply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Apply Now"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/green"
+            android:padding="14dp"
+            android:elevation="2dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
