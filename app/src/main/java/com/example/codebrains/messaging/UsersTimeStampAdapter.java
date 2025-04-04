@@ -68,40 +68,51 @@ public class UsersTimeStampAdapter extends RecyclerView.Adapter<UsersTimeStampAd
             return;
         }
 
+        Log.d(TAG, "Filtering users based on userType: " + userType);
+
+        // Log all client and freelancer IDs from the connections list
+        for (Connection connection : connections) {
+            Log.d(TAG, "Connection - Client ID: " + connection.getClient() + ", Freelancer ID: " + connection.getFreelancer());
+        }
+
         if (userType.equals("Client")) {
             // Show only freelancers connected to this client
             for (User user : users) {
-                Log.d("Checking Freelancer", user.getFirstName());
+                Log.d("Checking Freelancer", "Freelancer ID: " + user.getId() + ", Name: " + user.getFirstName());
                 if (isConnectedToFreelancer(user.getId(), connections)) {
                     userList.add(user);
+                    Log.d("Filtered Freelancer", "Added Freelancer ID: " + user.getId() + ", Name: " + user.getFirstName());
                 }
             }
         } else if (userType.equals("Freelancer")) {
             // Show only clients connected to this freelancer
             for (User user : users) {
-                Log.d("Checking Client", user.getFirstName());
+                Log.d("Checking Client", "Client ID: " + user.getId() + ", Name: " + user.getFirstName());
                 if (isConnectedToClient(user.getId(), connections)) {
                     userList.add(user);
+                    Log.d("Filtered Client", "Added Client ID: " + user.getId() + ", Name: " + user.getFirstName());
                 }
             }
         } else {
             // If userType is unknown, show all users
             userList.addAll(users);
+            Log.d(TAG, "User type is unknown. Showing all users.");
         }
     }
-
     /**
      * Check if the current client is connected to this freelancer
      */
     private boolean isConnectedToFreelancer(String freelancerId, ArrayList<Connection> connections) {
         for (Connection connection : connections) {
+            Log.d(TAG, "Checking connection - Client ID: " + connection.getClient() + ", Freelancer ID: " + connection.getFreelancer());
             if (connection.getClient().equals(currentUserId) && connection.getFreelancer().equals(freelancerId)) {
+                Log.d(TAG, "Freelancer ID: " + freelancerId + " is connected to current user (Client ID: " + currentUserId + ").");
                 return true;
             }
         }
+        Log.d(TAG, "Freelancer ID: " + freelancerId + " is NOT connected to current user (Client ID: " + currentUserId + ").");
         return false;
     }
-
     /**
      * Check if the current freelancer is connected to this client
      */

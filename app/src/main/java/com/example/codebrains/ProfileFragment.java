@@ -1,6 +1,9 @@
 package com.example.codebrains;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.Base64;
 
 public class ProfileFragment extends Fragment {
 
@@ -38,9 +41,9 @@ public class ProfileFragment extends Fragment {
     private Button edit_profile_button;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
-//    private NestedScrollView scrollView;
-private LinearLayout linear;
-ScrollView scroll;
+    private LinearLayout linear;
+    private ScrollView scroll;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -71,7 +74,7 @@ ScrollView scroll;
         // Fetch data from Firebase
         fetchClientData();
 
-        edit_profile_button.setOnClickListener(View -> editProfile());
+        edit_profile_button.setOnClickListener(v -> editProfile());
 
         return view;
     }
@@ -93,12 +96,12 @@ ScrollView scroll;
         completed = view.findViewById(R.id.completed);
         pending = view.findViewById(R.id.pending);
         welcome = view.findViewById(R.id.welcome_message);
-//        profileImage = view.findViewById(R.id.profile_image);
+        profileImage = view.findViewById(R.id.profile_image);
         progressBar = view.findViewById(R.id.progress_bar);
         in_progress = view.findViewById(R.id.in_progress);
         edit_profile_button = view.findViewById(R.id.edit_profile_button);
-        linear=view.findViewById(R.id.linear);
-        scroll=view.findViewById(R.id.scroll);
+        linear = view.findViewById(R.id.linear);
+        scroll = view.findViewById(R.id.scroll);
     }
 
     private void fetchClientData() {
@@ -117,16 +120,29 @@ ScrollView scroll;
                 client client = snapshot.getValue(client.class);
 
                 if (client != null && getActivity() != null) {
-                    name.setText("Name : "+getValidString(client.getFirstName()) + " " + getValidString(client.getLastName()));
-                    email.setText("Email : "+getValidString(client.getEmail()));
-                    mobile.setText("Contact : "+getValidString(client.getContactNo()));
-                    gender.setText("Gender : "+getValidString(client.getGender()));
-                    dob.setText("DOB : "+getValidString(client.getDob()));
+                    name.setText("Name : " + getValidString(client.getFirstName()) + " " + getValidString(client.getLastName()));
+                    email.setText("Email : " + getValidString(client.getEmail()));
+                    mobile.setText("Contact : " + getValidString(client.getContactNo()));
+                    gender.setText("Gender : " + getValidString(client.getGender()));
+                    dob.setText("DOB : " + getValidString(client.getDob()));
                     completed.setText(String.valueOf(client.getCompleted()));
                     pending.setText(String.valueOf(client.getPending()));
                     welcome.setText("Welcome , " + client.getFirstName());
                     total.setText(String.valueOf(client.getTotal_jobs()));
-                    in_progress.setText( String.valueOf(client.getIn_progress()));
+                    in_progress.setText(String.valueOf(client.getIn_progress()));
+
+                    // Handle profile image
+                    String profileImageBase64 = client.getProfileImage();
+                    if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
+                        try {
+                            byte[] decodedString = Base64.getDecoder().decode(profileImageBase64);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            profileImage.setImageBitmap(decodedByte);
+                        } catch (IllegalArgumentException e) {
+                            Log.e("ProfileFragment", "Failed to decode Base64 string: " + e.getMessage());
+                            Toast.makeText(getContext(), "Failed to load profile image", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
                     progressBar.setVisibility(View.GONE);
                     scroll.setVisibility(View.VISIBLE);
@@ -140,7 +156,6 @@ ScrollView scroll;
                 Toast.makeText(getContext(), "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void handleBackPress() {
@@ -152,6 +167,7 @@ ScrollView scroll;
             getActivity().onBackPressed();
         }
     }
+
     private String getValidString(String value) {
         return value != null ? value : "N/A";
     }

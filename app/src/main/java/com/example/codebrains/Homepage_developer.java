@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.Menu;
 
 import com.example.codebrains.freelancer.FindjobActivity;
-import com.example.codebrains.messaging.Chat;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -74,12 +73,10 @@ public class Homepage_developer extends AppCompatActivity {
                     Intent i=new Intent(Homepage_developer.this, FindjobActivity.class);
                     startActivity(i);
                 } else if (id == R.id.evaluate_project) {
-                    Intent intent=new Intent(Homepage_developer.this, payment1.class);
-                    startActivity(intent);
+                    // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.chat) {
-                    Intent intent=new Intent(Homepage_developer.this, Chat.class);
-                    startActivity(intent);
+                    // TODO: Handle chat manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.ContactUs) {
                     // Use the updated Contactus fragment with a no-argument constructor.

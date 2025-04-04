@@ -22,7 +22,7 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
     public ProposalsAdapter(List<Proposal> proposalsList) {
         this.proposalsList = proposalsList;
         mAuth = FirebaseAuth.getInstance();
-        connectionsRef = FirebaseDatabase.getInstance().getReference("connections");
+        connectionsRef = FirebaseDatabase.getInstance().getReference("Connections");
     }
 
     @NonNull

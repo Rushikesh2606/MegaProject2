@@ -126,7 +126,7 @@ public class Chat extends AppCompatActivity {
     private void fetchUsers() {
         progressBar.setVisibility(View.VISIBLE);
         userList.clear();
-Log.d("profession",profession);
+        Log.d("profession",profession);
         String targetNode = "Client".equals(profession) ? "freelancer" : "user";
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(targetNode);
 

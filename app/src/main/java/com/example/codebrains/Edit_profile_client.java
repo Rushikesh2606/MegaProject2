@@ -90,7 +90,7 @@ public class Edit_profile_client extends Fragment {
         password = view.findViewById(R.id.password);
         dob = view.findViewById(R.id.dob);
         countrySpinner = view.findViewById(R.id.country_spinner);
-        profileImage = view.findViewById(R.id.profile_image);
+        profileImage = view.findViewById(R.id.client_profile_image);
         btnUploadPhoto = view.findViewById(R.id.btn_upload_photo);
         btnSave = view.findViewById(R.id.btn_save);
         progress=view.findViewById(R.id.progress_bar);
