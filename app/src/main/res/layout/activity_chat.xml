@@ -14,7 +14,7 @@
             android:id="@+id/chatToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#2C3E50"
+            android:background="#1EB980"
             android:elevation="4dp"
             app:title="Conversations"
             app:titleTextColor="#FFFFFF"

@@ -18,7 +18,7 @@
     <color name="colorOnSurface">#FF000000</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
     <color name="teal_900">#FF004D40</color>
-
+    <color name="green_800">#2E7D32</color>
 
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#4CAF50</color>

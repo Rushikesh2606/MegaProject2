@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,43 +15,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header Section with Title and Status -->
-        <RelativeLayout
+        <!-- Header Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp">
 
-            <!-- Job Title -->
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/tvStatus"
                 android:text="Project Title"
                 android:textColor="#212121"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvStatus"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0" />
 
-            <!-- Job Status -->
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:paddingStart="10dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="4dp"
+                android:background="@drawable/bg_price_tag"
+                android:padding="8dp"
                 android:text="Open"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Divider -->
         <View
@@ -89,189 +91,132 @@
                 android:id="@+id/chipGroupSkills"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
-
-                <!-- Skills will be added programmatically -->
-                <!-- Example chip -->
-                <com.google.android.material.chip.Chip
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Android"
-                    app:chipBackgroundColor="#E3F2FD" />
-
+                android:layout_marginTop="8dp"
+                app:singleLine="true"
+                app:chipSpacing="8dp">
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
         <!-- Project Details Grid -->
-        <GridLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:columnCount="2"
-            android:rowCount="2">
+            android:layout_marginTop="16dp">
 
             <!-- Budget -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/budgetContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_money"
-                    android:tint="#388E3C"
+                    app:tint="#388E3C"
                     android:contentDescription="Budget icon" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Budget"
-                        android:textSize="12sp"
-                        android:textColor="#757575" />
-
-                    <TextView
-                        android:id="@+id/tvBudget"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$1000"
-                        android:textSize="16sp"
-                        android:textColor="#388E3C"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="$1000"
+                    android:textSize="16sp"
+                    android:textColor="#388E3C"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <!-- Deadline -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/deadlineContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_calendar"
-                    android:tint="#D32F2F"
+                    app:tint="#D32F2F"
                     android:contentDescription="Deadline icon" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvDeadline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Deadline"
-                        android:textSize="12sp"
-                        android:textColor="#757575" />
-
-                    <TextView
-                        android:id="@+id/tvDeadline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="10th Dec 2024"
-                        android:textSize="16sp"
-                        android:textColor="#D32F2F"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="10th Dec 2024"
+                    android:textSize="16sp"
+                    android:textColor="#D32F2F"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <!-- Bids Received -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/bidsContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/budgetContainer"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_person"
-                    android:tint="#FF9800"
+                    app:tint="#FF9800"
                     android:contentDescription="Bids icon" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvBids"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bids"
-                        android:textSize="12sp"
-                        android:textColor="#757575" />
-
-                    <TextView
-                        android:id="@+id/tvBids"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5 Received"
-                        android:textSize="16sp"
-                        android:textColor="#FF9800"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="5 Received"
+                    android:textSize="16sp"
+                    android:textColor="#FF9800"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <!-- Posted Date -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/postedContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_marginStart="8dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deadlineContainer"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_clock"
-                    android:tint="#607D8B"
+                    app:tint="#607D8B"
                     android:contentDescription="Posted date icon" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvPostedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Posted"
-                        android:textSize="12sp"
-                        android:textColor="#757575" />
-
-                    <TextView
-                        android:id="@+id/tvPostedDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2 days ago"
-                        android:textSize="16sp"
-                        android:textColor="#607D8B" />
-                </LinearLayout>
+                    android:text="2 days ago"
+                    android:textSize="16sp"
+                    android:textColor="#607D8B"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
-        </GridLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

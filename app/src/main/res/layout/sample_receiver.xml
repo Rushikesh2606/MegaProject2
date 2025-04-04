@@ -17,7 +17,7 @@
         android:maxWidth="270dp"
         android:minWidth="58dp"
         android:text="text"
-        android:textColor="#1E293B"
+        android:textColor="@color/colorOnSurface"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/appReceiverTime"
         app:layout_constraintEnd_toEndOf="parent"

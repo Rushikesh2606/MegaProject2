@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="24dp"
+    android:viewportWidth="40"
+    android:viewportHeight="24">
+
+    <!-- Card background -->
+    <path
+        android:fillColor="#1F6CB4"
+        android:pathData="M2,2 L38,2 Q40,2 40,4 L40,20 Q40,22 38,22 L2,22 Q0,22 0,20 L0,4 Q0,2 2,2 Z" />
+
+    <!-- AMEX Logo elements -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M6,8 L10,8 L11,10 L12,8 L20,8 L21,9.5 L22,8 L26,8 L26,15 L22,15 L21,13.5 L20,15 L12.5,15 L11.5,13 L10.5,15 L6,15 L6,8 Z" />
+
+    <!-- Central white area -->
+    <path
+        android:fillColor="#1F6CB4"
+        android:pathData="M7,9 L8.5,9 L10,12 L11.5,9 L13,9 L10.5,13.5 L10.5,14 L9.5,14 L9.5,13.5 L7,9 Z" />
+
+    <!-- Right white area -->
+    <path
+        android:fillColor="#1F6CB4"
+        android:pathData="M14,9 L19,9 L19,10 L14.5,10 L14.5,11 L19,11 L19,14 L14,14 L14,13 L18.5,13 L18.5,12 L14,12 L14,9 Z" />
+
+    <!-- Left white area -->
+    <path
+        android:fillColor="#1F6CB4"
+        android:pathData="M22,9 L25,9 L25,10 L22.5,10 L22.5,11 L25,11 L25,12 L22.5,12 L22.5,13 L25,13 L25,14 L22,14 L22,9 Z" />
+
+    <!-- Blue squares -->
+    <path
+        android:fillColor="#1F6CB4"
+        android:pathData="M27,8 L33,8 L33,15 L27,15 Z" />
+</vector>

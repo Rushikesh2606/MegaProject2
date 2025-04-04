@@ -41,8 +41,14 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set default filter to "All" if not provided
+        filter = "All";
         if (getArguments() != null) {
             filter = getArguments().getString("filter");
+        }
+        // Ensure filter is never null
+        if (filter == null) {
+            filter = "All";
         }
 
         // Initialize Firebase reference
@@ -89,8 +95,14 @@ public class JobFragment extends Fragment implements JobAdapter.OnJobCloseListen
     private void filterJobs() {
         filteredJobs.clear();
         for (JobController job : allJobs) {
-            if ("All".equalsIgnoreCase(filter) || job.getStatus().equalsIgnoreCase(filter)) {
+            // Check if status matches filter with null safety
+            if ("All".equalsIgnoreCase(filter)) {
                 filteredJobs.add(job);
+            } else {
+                String jobStatus = job.getStatus();
+                if (jobStatus != null && jobStatus.equalsIgnoreCase(filter)) {
+                    filteredJobs.add(job);
+                }
             }
         }
     }
