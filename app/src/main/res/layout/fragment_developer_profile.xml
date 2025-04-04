@@ -181,6 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:onClick="gocompleteA"
                     android:padding="12dp">
 
                     <TextView
@@ -188,6 +189,7 @@
                         android:layout_height="wrap_content"
                         android:text="Completed Jobs"
                         android:textSize="16sp"
+                        android:onClick="gocompleteA"
                         android:textStyle="bold"
                         android:textColor="#333333" />
 

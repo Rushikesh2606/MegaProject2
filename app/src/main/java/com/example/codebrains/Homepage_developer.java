@@ -6,7 +6,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.codebrains.freelancer.CompletedJobsActivity;
 import com.example.codebrains.freelancer.FindjobActivity;
+import com.example.codebrains.freelancer.JobCompletedAdapter;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -119,5 +121,14 @@ public class Homepage_developer extends AppCompatActivity {
 
         startActivity(new Intent(this, login.class));
         finish();
+    }
+
+
+    public void gocompleteA(View view) {
+
+
+        Intent i =new Intent(Homepage_developer.this, CompletedJobsActivity.class);
+        startActivity(i);
+
     }
 }
