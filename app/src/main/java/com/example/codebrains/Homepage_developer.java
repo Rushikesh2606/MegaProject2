@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.codebrains.freelancer.FindjobActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,8 @@ public class Homepage_developer extends AppCompatActivity {
                     FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.nav_host_fragment_content_homepage_developer, new HomeFragment());
+                    Intent intent=new Intent(Homepage_developer.this, FindjobActivity.class);
+                    startActivity(intent);
                     ft.commit();
                     handled = true;
                 } else if (id == R.id.evaluate_project) {
