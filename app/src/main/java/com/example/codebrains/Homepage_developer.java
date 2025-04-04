@@ -35,6 +35,7 @@ public class Homepage_developer extends AppCompatActivity {
         binding = ActivityHomepageDeveloperBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         setSupportActionBar(binding.appBarHomepageDeveloper.toolbar);
         binding.appBarHomepageDeveloper.fab.setOnClickListener(view -> {
             Intent intent = new Intent(Homepage_developer.this, AIchatbot.class);
