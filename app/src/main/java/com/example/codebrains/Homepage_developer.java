@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.codebrains.freelancer.FindjobActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.codebrains.databinding.ActivityHomepageDeveloperBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Homepage_developer extends AppCompatActivity {
 
@@ -68,11 +70,8 @@ public class Homepage_developer extends AppCompatActivity {
                     navController.navigate(R.id.nav_home);
                     handled = true;
                 } else if (id == R.id.findjob) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.nav_host_fragment_content_homepage_developer, new HomeFragment());
-                    ft.commit();
-                    handled = true;
+                    Intent i=new Intent(Homepage_developer.this, FindjobActivity.class);
+                    startActivity(i);
                 } else if (id == R.id.evaluate_project) {
                     // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
@@ -86,6 +85,8 @@ public class Homepage_developer extends AppCompatActivity {
                             .replace(R.id.nav_host_fragment_content_homepage_developer, contactusFragment)
                             .commit();
                     handled = true;
+                } else if (id==R.id.appLogOut) {
+                    permanentLogout();
                 }
 
                 // Close the drawer after a selection is made.
@@ -112,5 +113,11 @@ public class Homepage_developer extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+    public void permanentLogout() {
+        FirebaseAuth.getInstance().signOut();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        startActivity(new Intent(this, login.class));
+        finish();
+    }
 }

@@ -1,7 +1,6 @@
 package com.example.codebrains;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -18,16 +17,10 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return getFragmentForPosition(position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return 3; // Number of tabs
-    }
-
-    private Fragment getFragmentForPosition(int position) {
         Fragment fragment;
+        Bundle args = new Bundle();
+        args.putString("jobId", jobId);
+
         switch (position) {
             case 0:
                 fragment = new DetailsFragment();
@@ -42,14 +35,12 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 throw new IllegalArgumentException("Invalid tab position: " + position);
         }
 
-        // Pass jobId to the fragment via Bundle
-        fragment.setArguments(createBundleWithJobId());
+        fragment.setArguments(args);
         return fragment;
     }
 
-    private Bundle createBundleWithJobId() {
-        Bundle bundle = new Bundle();
-        bundle.putString("jobId", jobId);
-        return bundle;
+    @Override
+    public int getItemCount() {
+        return 3; // Number of tabs
     }
 }

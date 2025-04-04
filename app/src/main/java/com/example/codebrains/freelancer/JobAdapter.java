@@ -15,7 +15,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(JobController job);
+        void onItemClick(String jobId);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -60,7 +60,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemClick(jobs.get(position));
+                    JobController job = jobs.get(position);
+                    listener.onItemClick(job.getId()); // Assuming getId() exists
                 }
             });
         }

@@ -10,18 +10,29 @@ public class JobController {
     private String primarySkill;
     private String additionalSkills;
     private String experienceLevel;
+
     private double budget;
     private String deadline;
     private String attachments;
     private String additionalQuestions;
     private String status;
     private int noOfBidsReceived;
+    private String  projectVisibility;
+
     private String postedDate;
     private long postedTimestamp; // Added timestamp field
 
 
     // Default constructor
     public JobController() {}
+
+    public String getProjectVisibility() {
+        return projectVisibility;
+    }
+
+    public void setProjectVisibility(String projectVisibility) {
+        this.projectVisibility = projectVisibility;
+    }
 
     // Parameterized constructor
     public JobController(String id, String username, String jobTitle, String jobCategory, String jobDescription,

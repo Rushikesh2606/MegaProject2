@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.codebrains.R;
-import com.example.codebrains.SkillsFragment;
 import com.example.codebrains.model.JobController;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;

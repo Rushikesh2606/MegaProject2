@@ -10,6 +10,9 @@ public class Proposal {
     private String proposalId;
     private String freelancerId;
 
+    public Proposal() {
+    }
+
     public Proposal(String name, String location, float rating, String description, String price, String jobId, String proposalId, String freelancerId) {
         this.name = name;
         this.location = location;

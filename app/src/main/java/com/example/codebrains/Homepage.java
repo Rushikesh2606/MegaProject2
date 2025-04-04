@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.codebrains.job.JobActivity;
+import com.google.firebase.auth.FirebaseAuth;
+
 import com.example.codebrains.messaging.Chat;
 import com.google.android.material.navigation.NavigationView;
 
@@ -113,14 +115,7 @@ public class Homepage extends AppCompatActivity {
                     Intent i=new Intent(Homepage.this, Chat.class);
                     startActivity(i);
                 }else if (id==R.id.appLogOut) {
-                    auth.signOut(); // Sign out from Firebase
-                    Toast.makeText(Homepage.this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
-
-                    // Redirect to Login Activity
-                    Intent intent = new Intent(Homepage.this, login.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+                    permanentLogout();
 
                 }
 
@@ -152,5 +147,13 @@ public class Homepage extends AppCompatActivity {
     public void joblistbtn(View view) {
         Intent intent=new Intent(Homepage.this , JobActivity.class);
         startActivity(intent);
+    }
+
+    public void permanentLogout() {
+        FirebaseAuth.getInstance().signOut();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(new Intent(this, login.class));
+        finish();
     }
 }

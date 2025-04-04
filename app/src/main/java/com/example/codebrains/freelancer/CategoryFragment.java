@@ -78,23 +78,21 @@ public class CategoryFragment extends Fragment {
                     }
                     adapter.setJobs(jobs);
                 } else {
-                    // No data found
                     Log.d("CategoryFragment", "No jobs found for category: " + category);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
                 Log.e("CategoryFragment", "Failed to read jobs", error.toException());
             }
         });
     }
 
     private void setupClickListener() {
-        adapter.setOnItemClickListener(job -> {
+        adapter.setOnItemClickListener(jobId -> {
             Intent intent = new Intent(getActivity(), JobDetailActivity.class);
-            intent.putExtra("JOB_ID", job.getId());
+            intent.putExtra("JOB_ID", jobId);
             startActivity(intent);
         });
     }

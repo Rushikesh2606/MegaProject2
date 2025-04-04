@@ -7,8 +7,17 @@ public class Freelancer {
             email, password, country, username, dob, contactNo, gender;
     int total_jobs, in_progress, completed, pending;
     long timestamp;
+    float rating;
 
     public Freelancer() {
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     public Freelancer(String profession, String desc, String passout, String degree,
@@ -43,6 +52,7 @@ public class Freelancer {
         this.completed = completed;
         this.total_jobs = total_jobs;
         this.timestamp=0;
+        this.rating=0;
     }
 
     public long getTimestamp() {
