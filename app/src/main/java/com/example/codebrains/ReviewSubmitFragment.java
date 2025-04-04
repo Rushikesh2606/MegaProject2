@@ -1,5 +1,7 @@
 package com.example.codebrains;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import android.widget.AutoCompleteTextView;
 
@@ -105,8 +112,11 @@ public class ReviewSubmitFragment extends Fragment {
                                                     databaseReference.child(jobId).child("postedDate").setValue(postedDate)
                                                             .addOnCompleteListener(task3 -> {
                                                                 if (task3.isSuccessful()) {
-                                                                    Toast.makeText(requireContext(), "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
-                                                                    // Navigate to a success screen or clear the form
+                                                                    // Update total_jobs for the user
+                                                                    updateTotalJobsForUser();
+
+                                                                    // Navigate to ProfileFragment
+                                                                    navigateToProfileFragment();
                                                                 } else {
                                                                     Toast.makeText(requireContext(), "Failed to update posted date", Toast.LENGTH_SHORT).show();
                                                                 }
@@ -126,6 +136,48 @@ public class ReviewSubmitFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error: Missing data from previous fragments", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void updateTotalJobsForUser() {
+        // Get the current user ID
+        String currentUserId = auth.getCurrentUser().getUid();
+        if (currentUserId != null) {
+            // Get the current total_jobs value
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(currentUserId);
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        client client = snapshot.getValue(client.class);
+                        if (client != null) {
+                            int totalJobs = client.getTotal_jobs();
+                            totalJobs++; // Increment total_jobs
+
+                            // Update the total_jobs field in the database
+                            userRef.child("total_jobs").setValue(totalJobs)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Log.d("ReviewSubmitFragment", "Total jobs updated successfully");
+                                        } else {
+                                            Log.e("ReviewSubmitFragment", "Failed to update total jobs: " + task.getException());
+                                        }
+                                    });
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("ReviewSubmitFragment", "Failed to read user data: " + error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void navigateToProfileFragment() {
+        // Navigate to ProfileFragment
+        Intent i=new Intent(getContext(),Homepage.class);
+        startActivity(i);
     }
     private boolean validateInputs() {
         String locationPreference = locationPreferenceDropdown.getText().toString().trim();
