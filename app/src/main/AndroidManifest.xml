@@ -41,7 +41,8 @@
             android:exported="false" />
         <service android:name=".services.FirebaseConnectionService"
             android:exported="false"/>
-
+        <service android:name=".services.FirebaseMessageListenerService"
+            android:exported="false"/>
         <activity
             android:name=".messaging.Chat"
             android:exported="false" />

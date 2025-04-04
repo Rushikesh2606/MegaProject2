@@ -16,7 +16,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.codebrains.Homepage;
 import com.example.codebrains.R;
-import com.example.codebrains.MainActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -82,7 +82,7 @@ public class FirebaseProposalListenerService extends Service {
 
                                             // ✅ Save updated time
                                             SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-                                            prefs.edit().putLong(KEY_LAST_SERVICE_END_TIME, System.currentTimeMillis()).apply();
+                                            prefs.edit().putLong(KEY_LAST_SERVICE_END_TIME, finalProposalTimestamp).apply();
                                             Log.d(TAG, "✅ Updated lastServiceEndTime to: " + finalProposalTimestamp);
                                         }
                                     }

@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.codebrains.job.JobActivity;
+import com.example.codebrains.services.FirebaseConnectionService;
+import com.example.codebrains.services.FirebaseMessageListenerService;
+import com.example.codebrains.services.FirebaseProposalListenerService;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.example.codebrains.messaging.Chat;
@@ -155,5 +158,18 @@ public class Homepage extends AppCompatActivity {
 
         startActivity(new Intent(this, login.class));
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent serviceIntent = new Intent(this, FirebaseMessageListenerService.class);
+        stopService(serviceIntent);
+        Intent serviceIntent1 = new Intent(this, FirebaseConnectionService.class);
+        stopService(serviceIntent1);
+        Intent serviceIntent2 = new Intent(this, FirebaseProposalListenerService.class);
+        stopService(serviceIntent2);
+
+
+        super.onDestroy();
     }
 }

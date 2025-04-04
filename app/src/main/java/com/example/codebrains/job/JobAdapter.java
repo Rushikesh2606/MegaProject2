@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.codebrains.Job_View_Details;
 import com.example.codebrains.R;
 import com.example.codebrains.model.JobController;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -68,6 +69,33 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
                 closeListener.onJobClosed(holder.getAdapterPosition());
             }
         });
+        holder.btnCloseJob.setOnClickListener(v -> {
+            JobController jobToDelete = jobs.get(holder.getAdapterPosition());
+            String jobId = jobToDelete.getId();
+
+            if (jobId != null) {
+                FirebaseDatabase.getInstance().getReference("jobs")
+                        .child(jobId)
+                        .removeValue()
+                        .addOnSuccessListener(aVoid -> {
+                            // Remove from list and notify adapter
+                            int pos = holder.getAdapterPosition();
+                            jobs.remove(pos);
+                            notifyItemRemoved(pos);
+                            Toast.makeText(holder.itemView.getContext(), "Job closed successfully", Toast.LENGTH_SHORT).show();
+
+                            if (closeListener != null) {
+                                closeListener.onJobClosed(pos);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(holder.itemView.getContext(), "Failed to close job", Toast.LENGTH_SHORT).show();
+                        });
+            } else {
+                Toast.makeText(holder.itemView.getContext(), "Job ID is null. Cannot delete.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

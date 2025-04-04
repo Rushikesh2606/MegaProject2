@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.codebrains.services.FirebaseConnectionService;
+import com.example.codebrains.services.FirebaseMessageListenerService;
 import com.example.codebrains.services.FirebaseProposalListenerService;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -25,6 +26,7 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         startService(new Intent(this,FirebaseProposalListenerService.class));
         startService(new Intent(this, FirebaseConnectionService.class));
+        startService(new Intent(this, FirebaseMessageListenerService.class));
 
         // Check if the user has already logged in by retrieving the stored profession.
         SharedPreferences sp = getSharedPreferences("UserPrefs", MODE_PRIVATE);

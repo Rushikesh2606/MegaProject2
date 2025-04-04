@@ -71,16 +71,23 @@ public class CategoryFragment extends Fragment {
                     List<JobController> jobs = new ArrayList<>();
                     for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
                         JobController job = jobSnapshot.getValue(JobController.class);
-                        if (job != null) {
-                            job.setId(jobSnapshot.getKey());
-                            jobs.add(job);
+
+                        // ✅ Check if status exists and is "Open"
+                        if (jobSnapshot.hasChild("status")) {
+                            String status = jobSnapshot.child("status").getValue(String.class);
+                            if ("Open".equalsIgnoreCase(status) && job != null) {
+                                job.setId(jobSnapshot.getKey());
+                                jobs.add(job);
+                            }
                         }
                     }
+
                     adapter.setJobs(jobs);
                 } else {
                     Log.d("CategoryFragment", "No jobs found for category: " + category);
                 }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

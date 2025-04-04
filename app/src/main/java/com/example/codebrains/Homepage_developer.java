@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.Menu;
 
 import com.example.codebrains.freelancer.FindjobActivity;
+import com.example.codebrains.messaging.Chat;
+import com.example.codebrains.services.FirebaseConnectionService;
+import com.example.codebrains.services.FirebaseMessageListenerService;
+import com.example.codebrains.services.FirebaseProposalListenerService;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -76,8 +80,9 @@ public class Homepage_developer extends AppCompatActivity {
                     // TODO: Handle evaluate_project manually or navigate to its destination.
                     handled = true;
                 } else if (id == R.id.chat) {
-                    // TODO: Handle chat manually or navigate to its destination.
-                    handled = true;
+                    Intent i=new Intent(Homepage_developer.this, Chat.class);
+                    startActivity(i);
+
                 } else if (id == R.id.ContactUs) {
                     // Use the updated Contactus fragment with a no-argument constructor.
                     Contactus contactusFragment = new Contactus();
@@ -119,5 +124,17 @@ public class Homepage_developer extends AppCompatActivity {
 
         startActivity(new Intent(this, login.class));
         finish();
+    }
+    @Override
+    protected void onDestroy() {
+        Intent serviceIntent = new Intent(this, FirebaseMessageListenerService.class);
+        stopService(serviceIntent);
+        Intent serviceIntent1 = new Intent(this, FirebaseConnectionService.class);
+        stopService(serviceIntent1);
+        Intent serviceIntent2 = new Intent(this, FirebaseProposalListenerService.class);
+        stopService(serviceIntent2);
+
+
+        super.onDestroy();
     }
 }

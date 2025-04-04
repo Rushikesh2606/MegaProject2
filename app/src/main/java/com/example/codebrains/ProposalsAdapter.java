@@ -79,11 +79,26 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
                             }
 
                             // 3. Update job status to "in_progress"
-                            DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs");
+                            DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("jobs");
                             jobsRef.child(jobId).child("status").setValue("in_progress");
+// Update freelancer stats
+                            String freelancerId = proposal.getFreelancerId();
+                            DatabaseReference freelancerRef = FirebaseDatabase.getInstance().getReference("freelancer").child(freelancerId);
+
+                            freelancerRef.get().addOnSuccessListener(freelancerSnap -> {
+                                if (freelancerSnap.exists()) {
+                                    long freelancerInProgress = 0;
+
+                                    if (freelancerSnap.hasChild("in_progress")) {
+                                        freelancerInProgress = freelancerSnap.child("in_progress").getValue(Long.class);
+                                    }
+
+                                    freelancerRef.child("in_progress").setValue(freelancerInProgress + 1);
+                                }
+                            });
 
                             // 4. Update user stats
-                            DatabaseReference clientRef = FirebaseDatabase.getInstance().getReference("Users").child(clientId);
+                            DatabaseReference clientRef = FirebaseDatabase.getInstance().getReference("user").child(clientId);
                             clientRef.get().addOnSuccessListener(clientSnap -> {
                                 if (clientSnap.exists()) {
                                     long totalJobs = 0;
