@@ -9,11 +9,12 @@ public class Proposal {
     private String jobId;
     private String proposalId;
     private String freelancerId;
+    private long timestamp;
 
     public Proposal() {
     }
 
-    public Proposal(String name, String location, float rating, String description, String price, String jobId, String proposalId, String freelancerId) {
+    public Proposal(String name, String location, float rating, String description, String price, String jobId, String proposalId, String freelancerId,long timestamp) {
         this.name = name;
         this.location = location;
         this.rating = rating;
@@ -22,6 +23,7 @@ public class Proposal {
         this.jobId = jobId;
         this.proposalId = proposalId;
         this.freelancerId = freelancerId;
+        this.timestamp=timestamp;
     }
 
     // Getters
@@ -33,6 +35,14 @@ public class Proposal {
     public String getJobId() { return jobId; }
     public String getProposalId() { return proposalId; }
     public String getFreelancerId() { return freelancerId; }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     // Setters
     public void setName(String name) { this.name = name; }

@@ -94,7 +94,7 @@ public class Chat extends AppCompatActivity {
                         String status = connectionSnapshot.child("status").getValue(String.class);
 
                         if (connectionId != null && client != null && freelancer != null && jobId != null && status != null) {
-                            Connection connection = new Connection(connectionId, client, freelancer, jobId, status);
+                            Connection connection = new Connection(connectionId, client, freelancer, jobId, status,System.currentTimeMillis());
                             connectionList.add(connection);
                         } else {
                             Log.e(TAG, "Invalid connection data found: " + connectionId);

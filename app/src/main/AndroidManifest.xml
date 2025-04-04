@@ -5,7 +5,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
@@ -37,6 +36,11 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".services.FirebaseProposalListenerService"
+            android:exported="false" />
+        <service android:name=".services.FirebaseConnectionService"
+            android:exported="false"/>
 
         <activity
             android:name=".messaging.Chat"

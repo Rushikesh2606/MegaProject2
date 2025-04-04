@@ -111,7 +111,11 @@ public class BidActivity extends AppCompatActivity {
         String freelancerId = currentUser.getUid();
 
         String proposalId = proposalsRef.push().getKey();
-        Proposal proposal = new Proposal(name, location, rating, description, price, jobId, proposalId, freelancerId);
+        // Get the current timestamp as a long value
+        long timestamp = System.currentTimeMillis();
+
+        // Updated constructor with the timestamp parameter.
+        Proposal proposal = new Proposal(name, location, rating, description, price, jobId, proposalId, freelancerId, timestamp);
 
         if (proposalId != null) {
             proposalsRef.child(proposalId).setValue(proposal)
@@ -126,6 +130,7 @@ public class BidActivity extends AppCompatActivity {
                     });
         }
     }
+
 
     private void updateNoOfBidsReceived(String jobId) {
         DatabaseReference jobRef = jobsRef.child(jobId);

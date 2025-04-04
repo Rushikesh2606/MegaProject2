@@ -6,16 +6,26 @@ public class Connection {
     private String freelancer;
     private String jobId;
     private String status;
+    long timeStamp;
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public Connection() {
     }
 
-    public Connection(String connectionId, String client, String freelancer, String jobId, String status) {
+    public Connection(String connectionId, String client, String freelancer, String jobId, String status,long timeStamp) {
         this.connectionId = connectionId;
         this.client = client;
         this.freelancer = freelancer;
         this.jobId = jobId;
         this.status = status;
+        this.timeStamp=timeStamp;
     }
 
     // Getters and setters

@@ -63,6 +63,7 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
                     proposal.getFreelancerId(),
                     jobId,
                     "pending"
+                    ,System.currentTimeMillis()
             );
 
             connectionsRef.child(connectionId).setValue(connection)
