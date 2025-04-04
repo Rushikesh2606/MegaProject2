@@ -108,4 +108,9 @@ public class login extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         prefs.edit().putString("profession", role).apply();
     }
+
+    public void gosignup(View view) {
+        Intent intent =new Intent(login.this, signup.class);
+        startActivity(intent);
+    }
 }

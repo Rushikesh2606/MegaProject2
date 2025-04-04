@@ -253,8 +253,10 @@
                     android:layout_height="wrap_content"
                     android:text="Sign Up"
                     android:textColor="#1EB980"
+                    android:onClick="gosignup"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="OnClick" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
