@@ -2,35 +2,32 @@ package com.example.codebrains.freelancer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.example.codebrains.BidActivity;
-import com.example.codebrains.model.JobController;
 import com.example.codebrains.R;
+import com.example.codebrains.model.JobController;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,19 +38,20 @@ public class JobDetailActivity extends AppCompatActivity {
     private DatabaseReference jobsRef;
     private Button btn, btnDownloadAttachment;
     private static final int STORAGE_PERMISSION_CODE = 100;
+    private Animation scale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
 
-        // Initialize Firebase Database reference
+        // Firebase DB
         jobsRef = FirebaseDatabase.getInstance().getReference("jobs");
 
-        // Initialize UI components
+        // Init Views
         initializeViews();
 
-        // Get the job ID from the intent
+        // Job ID
         String jobId = getIntent().getStringExtra("JOB_ID");
 
         if (jobId != null) {
@@ -61,11 +59,59 @@ public class JobDetailActivity extends AppCompatActivity {
             fetchJobDetails(jobId);
         } else {
             Toast.makeText(this, "Job ID not found", Toast.LENGTH_SHORT).show();
-            Log.e("JobDetailActivity", "Job ID is null");
         }
 
-        setupButtonClickListeners(jobId);
+        // Animations
         animateViews();
+
+        // Setup scale animation for buttons
+        scale = AnimationUtils.loadAnimation(JobDetailActivity.this, R.anim.scale_bounce);
+
+        btn.setOnClickListener(v -> {
+            v.startAnimation(scale);
+            scale.setAnimationListener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (jobId != null) {
+                        Intent i = new Intent(JobDetailActivity.this, BidActivity.class);
+                        i.putExtra("JOB_ID", jobId);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(JobDetailActivity.this, "Job ID not found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override public void onAnimationRepeat(Animation animation) {}
+            });
+        });
+
+        btnDownloadAttachment.setOnClickListener(v -> {
+            v.startAnimation(scale);
+            scale.setAnimationListener(new Animation.AnimationListener() {
+                @Override public void onAnimationStart(Animation animation) {}
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (jobId != null) {
+                        jobsRef.child(jobId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                JobController job = snapshot.getValue(JobController.class);
+                                if (job != null && job.getAttachments() != null && !job.getAttachments().isEmpty()) {
+                                    if (checkStoragePermission()) {
+                                        downloadAttachment(job.getAttachments(), job.getJobTitle());
+                                    } else {
+                                        requestStoragePermission();
+                                    }
+                                }
+                            }
+
+                            @Override public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+                    }
+                }
+                @Override public void onAnimationRepeat(Animation animation) {}
+            });
+        });
     }
 
     private void initializeViews() {
@@ -78,18 +124,6 @@ public class JobDetailActivity extends AppCompatActivity {
         experience = findViewById(R.id.tv_experience);
         btn = findViewById(R.id.btn_submit_proposal);
         btnDownloadAttachment = findViewById(R.id.btn_download_attachment);
-    }
-
-    private void setupButtonClickListeners(String jobId) {
-        btn.setOnClickListener(v -> {
-            if (jobId != null) {
-                Intent i = new Intent(JobDetailActivity.this, BidActivity.class);
-                i.putExtra("JOB_ID", jobId);
-                startActivity(i);
-            } else {
-                Toast.makeText(this, "Job ID not found", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void fetchJobDetails(String jobId) {
@@ -128,13 +162,6 @@ public class JobDetailActivity extends AppCompatActivity {
     private void handleAttachmentDownload(JobController job) {
         if (job.getAttachments() != null && !job.getAttachments().isEmpty()) {
             btnDownloadAttachment.setVisibility(View.VISIBLE);
-            btnDownloadAttachment.setOnClickListener(v -> {
-                if (checkStoragePermission()) {
-                    downloadAttachment(job.getAttachments(), job.getJobTitle());
-                } else {
-                    requestStoragePermission();
-                }
-            });
         }
     }
 
@@ -163,9 +190,7 @@ public class JobDetailActivity extends AppCompatActivity {
         try {
             byte[] fileData = Base64.decode(base64Data, Base64.DEFAULT);
             File downloadsDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            if (!downloadsDir.exists()) {
-                downloadsDir.mkdirs();
-            }
+            if (!downloadsDir.exists()) downloadsDir.mkdirs();
 
             String fileName = "attachment_" + jobTitle.replace(" ", "_") + ".pdf";
             File file = new File(downloadsDir, fileName);
@@ -176,17 +201,36 @@ public class JobDetailActivity extends AppCompatActivity {
 
             Toast.makeText(this, "File downloaded to " + file.getAbsolutePath(),
                     Toast.LENGTH_LONG).show();
-            Log.d("download",file.getAbsolutePath());
+            Log.d("download", file.getAbsolutePath());
+
         } catch (IOException e) {
             Log.e("DownloadAttachment", "Error saving file", e);
             Toast.makeText(this, "Failed to download file", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    // ... rest of the existing animation code remains exactly the same ...
-    @SuppressLint({"ObjectAnimatorBinding", "ClickableViewAccessibility"})
+    @SuppressLint("ClickableViewAccessibility")
     private void animateViews() {
-        // Existing animation code remains unchanged
+        View rootView = findViewById(android.R.id.content).getRootView();
+        Animation fadeIn = AnimationUtils.loadAnimation(JobDetailActivity.this, R.anim.fade_in);
+        rootView.startAnimation(fadeIn);
+
+        int[] slideIds = {
+                R.id.tv_title,
+                R.id.tv_category,
+                R.id.tv_description,
+                R.id.tv_budget,
+                R.id.tv_deadline,
+                R.id.tv_skills,
+                R.id.tv_experience,
+                R.id.btn_submit_proposal,
+                R.id.btn_download_attachment
+        };
+
+        Animation slideUp = AnimationUtils.loadAnimation(JobDetailActivity.this, R.anim.slide_up);
+        for (int id : slideIds) {
+            View item = findViewById(id);
+            item.startAnimation(slideUp);
+        }
     }
 }

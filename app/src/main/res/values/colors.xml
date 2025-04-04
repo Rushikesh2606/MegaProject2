@@ -20,6 +20,9 @@
     <color name="teal_900">#FF004D40</color>
     <color name="green_800">#2E7D32</color>
 
+
+    <color name="inactive_step">#BDBDBD</color> <!-- Example: Gray -->
+
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#4CAF50</color>
     <color name="colorReopenButton">#2E7D32</color>

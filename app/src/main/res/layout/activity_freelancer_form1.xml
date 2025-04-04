@@ -28,6 +28,14 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:boxStrokeColor="#1EB980"
+            app:endIconTint="#1EB980"
+            app:hintTextColor="#1EB980"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+
             android:hint="Job Category"
             android:layout_marginBottom="16dp">
 
@@ -44,6 +52,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tools/Software Expertise"
+            app:boxStrokeColor="#1EB980"
+            app:endIconTint="#1EB980"
+            app:hintTextColor="#1EB980"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -59,6 +74,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tagline"
+            app:boxStrokeColor="#1EB980"
+            app:endIconTint="#1EB980"
+            app:hintTextColor="#1EB980"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -74,6 +96,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description/About Me"
+            app:boxStrokeColor="#1EB980"
+            app:endIconTint="#1EB980"
+            app:hintTextColor="#1EB980"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -91,6 +120,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Years of Experience"
+            app:boxStrokeColor="#1EB980"
+            app:endIconTint="#1EB980"
+            app:hintTextColor="#1EB980"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText

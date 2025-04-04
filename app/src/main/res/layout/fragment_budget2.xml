@@ -53,7 +53,13 @@
                         app:boxCornerRadiusBottomStart="16dp"
                         app:boxCornerRadiusTopEnd="16dp"
                         app:boxCornerRadiusTopStart="16dp"
-                        android:layout_marginBottom="16dp">
+                        android:layout_marginBottom="16dp"
+
+                        app:boxStrokeColor="#1EB980"
+                        app:endIconTint="#1EB980"
+                        app:hintTextColor="#1EB980"
+
+                        >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/budget_amount"
@@ -70,6 +76,9 @@
                         android:layout_marginBottom="16dp"
                         app:boxCornerRadiusBottomEnd="16dp"
                         app:boxCornerRadiusBottomStart="16dp"
+                        app:boxStrokeColor="#1EB980"
+                        app:endIconTint="#1EB980"
+                        app:hintTextColor="#1EB980"
                         app:boxCornerRadiusTopEnd="16dp"
                         app:boxCornerRadiusTopStart="16dp"
                         android:hint="Select Budget Type">
@@ -87,6 +96,9 @@
                         android:layout_height="wrap_content"
                         app:boxCornerRadiusBottomEnd="16dp"
                         app:boxCornerRadiusBottomStart="16dp"
+                        app:boxStrokeColor="#1EB980"
+                        app:endIconTint="#1EB980"
+                        app:hintTextColor="#1EB980"
                         app:boxCornerRadiusTopEnd="16dp"
                         app:boxCornerRadiusTopStart="16dp"
                         android:layout_marginBottom="16dp">
@@ -105,6 +117,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxStrokeColor="#1EB980"
+                        app:endIconTint="#1EB980"
+                        app:hintTextColor="#1EB980"
                         app:boxCornerRadiusBottomStart="16dp"
                         app:boxCornerRadiusTopEnd="16dp"
                         app:boxCornerRadiusTopStart="16dp"

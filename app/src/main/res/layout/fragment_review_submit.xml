@@ -35,6 +35,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:boxStrokeColor="#1EB980"
+                app:endIconTint="#1EB980"
+                app:hintTextColor="#1EB980"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
                 android:hint="Select Location">
 
                 <AutoCompleteTextView
@@ -51,6 +58,13 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:boxStrokeColor="#1EB980"
+                app:endIconTint="#1EB980"
+                app:hintTextColor="#1EB980"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
                 android:layout_marginBottom="16dp"
                 android:hint="Ask any additional questions if required">
 

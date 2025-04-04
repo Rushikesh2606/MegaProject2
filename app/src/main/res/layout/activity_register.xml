@@ -53,7 +53,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -68,7 +73,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     app:passwordToggleEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -85,7 +95,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     app:passwordToggleEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -102,7 +117,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -117,8 +137,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Availability Status"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                     <AutoCompleteTextView
@@ -135,7 +161,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
                     app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -154,6 +185,13 @@
                     android:text="Choose Profile Picture"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="16dp"
+                    app:boxStrokeColor="#1EB980"
+                    app:endIconTint="#1EB980"
+                    app:hintTextColor="#1EB980"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp"
                     app:cornerRadius="8dp"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 

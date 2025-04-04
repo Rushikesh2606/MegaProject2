@@ -90,7 +90,7 @@ public class JobpostingActivity extends AppCompatActivity {
     }
 
     void updateStepIndicators(int currentStep) {
-        // Update step backgrounds
+        // Update step circle backgrounds
         step1.setBackground(ContextCompat.getDrawable(this,
                 currentStep >= 1 ? R.drawable.circle_active : R.drawable.circle_inactive));
         step2.setBackground(ContextCompat.getDrawable(this,
@@ -100,14 +100,13 @@ public class JobpostingActivity extends AppCompatActivity {
         step4.setBackground(ContextCompat.getDrawable(this,
                 currentStep >= 4 ? R.drawable.circle_active : R.drawable.circle_inactive));
 
-        // Reset all step lines
-        stepLine1.setBackgroundResource(R.color.green);
-        stepLine2.setBackgroundResource(R.color.green);
-        stepLine3.setBackgroundResource(R.color.green);
+        // Update line colors based on current step
+        stepLine1.setBackgroundColor(ContextCompat.getColor(this,
+                currentStep >= 2 ? R.color.active_step : R.color.inactive_step));
+        stepLine2.setBackgroundColor(ContextCompat.getColor(this,
+                currentStep >= 3 ? R.color.active_step : R.color.inactive_step));
+        stepLine3.setBackgroundColor(ContextCompat.getColor(this,
+                currentStep >= 4 ? R.color.active_step : R.color.inactive_step));
+    }
 
-        // Activate the corresponding steps and lines based on the current step
-        if (currentStep > 1) stepLine1.setBackgroundResource(R.color.active_step);
-        if (currentStep > 2) stepLine2.setBackgroundResource(R.color.active_step);
-        if (currentStep > 3) stepLine3.setBackgroundResource(R.color.active_step);
-    }
-    }
+}

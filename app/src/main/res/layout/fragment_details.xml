@@ -4,22 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
+    android:layout_margin="16dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    android:stateListAnimator="@animator/card_scale_animator">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
         <!-- Header Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dp">
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -36,16 +37,20 @@
                 app:layout_constraintEnd_toStartOf="@+id/tvStatus"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0" />
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_marginEnd="12dp" />
 
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_price_tag"
-                android:padding="8dp"
+                android:background="@drawable/bg_status_tag"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:text="Open"
-                android:textColor="@color/black"
+                android:textColor="#2E7D32"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,11 +69,11 @@
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Project Description"
+            android:layout_marginTop="16dp"
+            android:text="Project Description that provides details about what the client is looking for. This can be a longer text that describes the requirements and expectations for the project."
             android:textColor="#616161"
             android:textSize="16sp"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingExtra="6dp"
             android:maxLines="3"
             android:ellipsize="end" />
 
@@ -77,23 +82,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skills Required"
-                android:textColor="#2196F3"
+                android:textColor="#1976D2"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupSkills"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:singleLine="true"
-                app:chipSpacing="8dp">
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="React"
+                    app:chipBackgroundColor="#E3F2FD"
+                    android:textColor="#1976D2" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Node.js"
+                    app:chipBackgroundColor="#E3F2FD"
+                    android:textColor="#1976D2" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UI/UX"
+                    app:chipBackgroundColor="#E3F2FD"
+                    android:textColor="#1976D2" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="API Integration"
+                    app:chipBackgroundColor="#E3F2FD"
+                    android:textColor="#1976D2" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
@@ -101,7 +135,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="24dp">
 
             <!-- Budget -->
             <LinearLayout
@@ -114,10 +148,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_money"
-                    app:tint="#388E3C"
+                    app:tint="#2E7D32"
                     android:contentDescription="Budget icon" />
 
                 <TextView
@@ -126,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:text="$1000"
                     android:textSize="16sp"
-                    android:textColor="#388E3C"
+                    android:textColor="#2E7D32"
                     android:textStyle="bold"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
@@ -142,10 +176,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_calendar"
-                    app:tint="#D32F2F"
+                    app:tint="#C62828"
                     android:contentDescription="Deadline icon" />
 
                 <TextView
@@ -154,12 +188,12 @@
                     android:layout_height="wrap_content"
                     android:text="10th Dec 2024"
                     android:textSize="16sp"
-                    android:textColor="#D32F2F"
+                    android:textColor="#C62828"
                     android:textStyle="bold"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
-            <!-- Bids Received -->
+            <!-- Bids -->
             <LinearLayout
                 android:id="@+id/bidsContainer"
                 android:layout_width="wrap_content"
@@ -168,13 +202,13 @@
                 android:gravity="center_vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/budgetContainer"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginTop="16dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_person"
-                    app:tint="#FF9800"
+                    app:tint="#EF6C00"
                     android:contentDescription="Bids icon" />
 
                 <TextView
@@ -183,7 +217,7 @@
                     android:layout_height="wrap_content"
                     android:text="5 Received"
                     android:textSize="16sp"
-                    android:textColor="#FF9800"
+                    android:textColor="#EF6C00"
                     android:textStyle="bold"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
@@ -197,13 +231,13 @@
                 android:gravity="center_vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/deadlineContainer"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginTop="16dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_clock"
-                    app:tint="#607D8B"
+                    app:tint="#546E7A"
                     android:contentDescription="Posted date icon" />
 
                 <TextView
@@ -212,7 +246,7 @@
                     android:layout_height="wrap_content"
                     android:text="2 days ago"
                     android:textSize="16sp"
-                    android:textColor="#607D8B"
+                    android:textColor="#546E7A"
                     android:textStyle="bold"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
