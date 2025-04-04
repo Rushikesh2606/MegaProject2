@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.codebrains.Homepage;
 import com.example.codebrains.R;
 import com.example.codebrains.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,7 +82,7 @@ public class FirebaseProposalListenerService extends Service {
 
                                             // ✅ Save updated time
                                             SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-                                            prefs.edit().putLong(KEY_LAST_SERVICE_END_TIME, finalProposalTimestamp).apply();
+                                            prefs.edit().putLong(KEY_LAST_SERVICE_END_TIME, System.currentTimeMillis()).apply();
                                             Log.d(TAG, "✅ Updated lastServiceEndTime to: " + finalProposalTimestamp);
                                         }
                                     }
@@ -113,7 +114,7 @@ public class FirebaseProposalListenerService extends Service {
     }
 
     private void sendNotification(String title, String message) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Homepage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
