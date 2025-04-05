@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,20 +45,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Edit_profile_freelancer extends Fragment {
 
-
     public Edit_profile_freelancer() {
         // Required empty public constructor
     }
 
-    private EditText first_name,last_name,password, email, mobile,experience, gender, dob, skills,tools, tagline, desc;
+    private EditText first_name, last_name, password, email, mobile, experience, gender, dob, skills, tools, tagline, desc;
     private CircleImageView profileImage;
     Button edit_profile;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
-    Button btn_upload_photo,btn_save;
+    Button btn_upload_photo, btn_save;
     FirebaseUser currentUser;
+    private Bitmap profileImageBitmap;
 
-    AutoCompleteTextView country,gender_spinner;
+    AutoCompleteTextView country, gender_spinner;
     ArrayList<String> countryList = new ArrayList<>(Arrays.asList(
             "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
             "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
@@ -99,18 +102,18 @@ public class Edit_profile_freelancer extends Fragment {
     ));
     private static final int CAMERA_REQ = 100, GALLERY_REQ = 200;
 
-ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
+    ArrayList<String> gender_array = new ArrayList<>(Arrays.asList("Male", "Female"));
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_edit_profile_freelancer, container, false);
-        intitialize(view);
-        ArrayAdapter<String> aa=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,countryList);
+        View view = inflater.inflate(R.layout.fragment_edit_profile_freelancer, container, false);
+        initialize(view);
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, countryList);
         country.setAdapter(aa);
 
-        ArrayAdapter<String> gaa=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, gender_array);
+        ArrayAdapter<String> gaa = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, gender_array);
         gender_spinner.setAdapter(gaa);
 
         mAuth = FirebaseAuth.getInstance();
@@ -119,16 +122,17 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
         if (currentUserId == null) {
             Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
             return view;
-        };
+        }
         userRef = FirebaseDatabase.getInstance().getReference("freelancer").child(currentUserId);
 
         fetchDeveloperData();
 
-        btn_upload_photo.setOnClickListener(View -> selectPic());
-        btn_save.setOnClickListener(View->saveProfile());
+        btn_upload_photo.setOnClickListener(v -> selectPic());
+        btn_save.setOnClickListener(v -> saveProfile());
 
         return view;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,8 +140,7 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_homepage_developer,new developer_profile());
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_homepage_developer, new developer_profile());
             }
         });
     }
@@ -178,6 +181,10 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
             updatedData.put("yearsOfExperience", experience.getText().toString());
             updatedData.put("password", password.getText().toString());
 
+            if (profileImageBitmap != null) {
+                updatedData.put("profileImageBase64", bitmapToBase64(profileImageBitmap));
+            }
+
             userRef.updateChildren(updatedData).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d("FirebaseUpdate", "Profile updated successfully");
@@ -190,8 +197,6 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
             });
         }
     }
-
-
 
     private void selectPic() {
         AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
@@ -221,21 +226,29 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQ) {
                 // Get the image from the camera
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                profileImage.setImageBitmap(photo);  // Convert Bitmap to Uri
+                profileImageBitmap = (Bitmap) data.getExtras().get("data");
+                profileImage.setImageBitmap(profileImageBitmap);
             } else if (requestCode == GALLERY_REQ) {
                 // Get the image from the gallery
-
+                Uri selectedImage = data.getData();
+                try {
+                    profileImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImage);
+                    profileImage.setImageBitmap(profileImageBitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-    private Uri getImageUri(Bitmap inImage) {
-        String path = MediaStore.Images.Media.insertImage(requireActivity().getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    private void intitialize(View view) {
-
+    private void initialize(View view) {
         first_name = view.findViewById(R.id.first_name);
         last_name = view.findViewById(R.id.last_name);
         email = view.findViewById(R.id.email);
@@ -246,22 +259,20 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
         tagline = view.findViewById(R.id.tagline);
         profileImage = view.findViewById(R.id.profile_image);
         password = view.findViewById(R.id.password);
-        desc=view.findViewById(R.id.description);
-        tools=view.findViewById(R.id.tools_expertise);
-        experience=view.findViewById(R.id.experience);
-        country=view.findViewById(R.id.country);
-        btn_upload_photo=view.findViewById(R.id.btn_upload_photo);
-        profileImage=view.findViewById(R.id.profileImage);
-        btn_save=view.findViewById(R.id.btn_save);
+        desc = view.findViewById(R.id.description);
+        tools = view.findViewById(R.id.tools_expertise);
+        experience = view.findViewById(R.id.experience);
+        country = view.findViewById(R.id.country);
+        btn_upload_photo = view.findViewById(R.id.btn_upload_photo);
+        btn_save = view.findViewById(R.id.btn_save);
     }
+
     private void fetchDeveloperData() {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
                     Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
-//                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 
@@ -275,14 +286,21 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
                     last_name.setText(getValidString(freelancer.getLastName()));
                     email.setText(getValidString(freelancer.getEmail()));
                     mobile.setText(getValidString(freelancer.getContactNo()));
-                    skills.setText( getValidString(freelancer.getSkills()));
+                    skills.setText(getValidString(freelancer.getSkills()));
                     tools.setText(getValidString(freelancer.getTools()));
-                    tagline.setText( getValidString(freelancer.getTagLine()));
+                    tagline.setText(getValidString(freelancer.getTagLine()));
                     desc.setText(getValidString(freelancer.getDesc()));
                     dob.setText(getValidString(freelancer.getDob()));
                     experience.setText(getValidString(freelancer.getYearsOfExperience()));
-//                    gender_spinner.setText(getValidString(freelancer.getGender()));
-//                    country.setText(getValidString(freelancer.getCountry()));
+                    gender_spinner.setText(getValidString(freelancer.getGender()));
+                    country.setText(getValidString(freelancer.getCountry()));
+
+                    // Load profile image
+                    if (freelancer.getProfileImage() != null) {
+                        byte[] decodedString = Base64.decode(freelancer.getProfileImage(), Base64.DEFAULT);
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        profileImage.setImageBitmap(decodedByte);
+                    }
 
                     Toast.makeText(getContext(), "Profile data loaded successfully", Toast.LENGTH_SHORT).show();
                 }
@@ -290,14 +308,12 @@ ArrayList<String> gender_array=new ArrayList<>(Arrays.asList("Male","Female"));
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
                 Toast.makeText(getContext(), "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private String getValidString(String value) {
         return value != null ? value : "N/A";
     }
-
-
 }

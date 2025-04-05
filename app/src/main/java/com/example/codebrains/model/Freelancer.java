@@ -8,7 +8,7 @@ public class Freelancer {
     int total_jobs, in_progress, completed, pending;
     long timestamp;
     float rating;
-
+String profileImage;
     public Freelancer() {
     }
 
@@ -26,7 +26,7 @@ public class Freelancer {
                       String yearsOfExperience, String firstName, String lastName,
                       String email, String password, String country, String username,
                       String dob, String gender, String contactNo,
-                      int pending, int in_progress, int completed, int total_jobs) {
+                      int pending, int in_progress, int completed, int total_jobs,String profileImage) {
         this.profession = profession;
         this.desc = desc;
         this.passout = passout;
@@ -53,6 +53,15 @@ public class Freelancer {
         this.total_jobs = total_jobs;
         this.timestamp=0;
         this.rating=0;
+        this.profileImage=profileImage;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public long getTimestamp() {

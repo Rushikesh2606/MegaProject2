@@ -90,6 +90,7 @@ public class freelancer_register extends AppCompatActivity {
                     String dob = bundle.getString("dob");
                     String contactNo = bundle.getString("contact_no");
                     String gender = bundle.getString("gender");
+                    String profileImageBase64 = bundle.getString("profile_image_base64");
 
                     Log.d("FREELANCER_REGISTER", "Starting Firebase User Registration...");
 
@@ -103,7 +104,7 @@ public class freelancer_register extends AppCompatActivity {
                                     Freelancer freelancer = new Freelancer(
                                             "Freelancer", desc, Passout, Degree, Language, Institute, Availability,
                                             skills, tagLine, tools, yearsOfExperience, firstName, lastName, email,
-                                            password, country, username, dob, gender, contactNo, 0, 0, 0, 0
+                                            password, country, username, dob, gender, contactNo, 0, 0, 0, 0,profileImageBase64
                                     );
 
                                     Log.d("FREELANCER_REGISTER", "Saving user data to Firebase...");
@@ -219,9 +220,8 @@ public class freelancer_register extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i=new Intent(freelancer_register.this, register.class);
+        Intent i = new Intent(freelancer_register.this, register.class);
         startActivity(i);
         super.onBackPressed();
-
     }
 }

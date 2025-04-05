@@ -10,7 +10,6 @@ import com.example.codebrains.analyzer.pythoncode;
 import com.example.codebrains.freelancer.FindjobActivity;
 import com.example.codebrains.messaging.Chat;
 import com.example.codebrains.services.FirebaseConnectionService;
-import com.example.codebrains.services.FirebaseMessageListenerService;
 import com.example.codebrains.services.FirebaseProposalListenerService;
 import com.google.android.material.navigation.NavigationView;
 
@@ -132,8 +131,6 @@ startActivity(i);
     }
     @Override
     protected void onDestroy() {
-        Intent serviceIntent = new Intent(this, FirebaseMessageListenerService.class);
-        stopService(serviceIntent);
         Intent serviceIntent1 = new Intent(this, FirebaseConnectionService.class);
         stopService(serviceIntent1);
         Intent serviceIntent2 = new Intent(this, FirebaseProposalListenerService.class);

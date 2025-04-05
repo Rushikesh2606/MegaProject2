@@ -4,7 +4,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +26,6 @@ import com.example.codebrains.freelancer.CompletedJobsActivity;
 import com.example.codebrains.freelancer.JobCompletedAdapter;
 import com.example.codebrains.model.Freelancer;
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class developer_profile extends Fragment {
 
-    private TextView name, email, mobile, gender, dob, skills, total, tagline, completed, pending,welcome;
+    private TextView name, email, mobile, gender, dob, skills, total, tagline, completed, pending, welcome;
     private CircleImageView profileImage;
     private ProgressBar progressBar;
     Button edit_profile_button;
@@ -69,8 +71,8 @@ public class developer_profile extends Fragment {
         // Fetch data from Firebase
         fetchDeveloperData();
 
-//        edit profile
-        edit_profile_button.setOnClickListener(View -> editProfile());
+        // Edit profile
+        edit_profile_button.setOnClickListener(v -> editProfile());
 
         return view;
     }
@@ -80,7 +82,6 @@ public class developer_profile extends Fragment {
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.nav_host_fragment_content_homepage_developer, new Edit_profile_freelancer());
         ft.commit();
-
     }
 
     private void initializeViews(View view) {
@@ -94,17 +95,15 @@ public class developer_profile extends Fragment {
         tagline = view.findViewById(R.id.tagline);
         completed = view.findViewById(R.id.completed);
         pending = view.findViewById(R.id.pending);
-        welcome=view.findViewById(R.id.welcome_message);
+        welcome = view.findViewById(R.id.welcome_message);
         profileImage = view.findViewById(R.id.profile_image);
         progressBar = view.findViewById(R.id.progress_bar);
         scrollView = view.findViewById(R.id.profile);
-
-        edit_profile_button=view.findViewById(R.id.edit_profile_button);
+        edit_profile_button = view.findViewById(R.id.edit_profile_button);
     }
 
     private void fetchDeveloperData() {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
@@ -129,13 +128,19 @@ public class developer_profile extends Fragment {
                     tagline.setText("Tagline: " + getValidString(freelancer.getTagLine()));
                     completed.setText(String.valueOf(freelancer.getCompleted()));
                     pending.setText(String.valueOf(freelancer.getPending()));
-                    welcome.setText("Welcome , "+freelancer.getFirstName());
+                    welcome.setText("Welcome, " + freelancer.getFirstName());
+
+                    // Load profile image
+                    if (freelancer.getProfileImage() != null) {
+                        byte[] decodedString = Base64.decode(freelancer.getProfileImage(), Base64.DEFAULT);
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        profileImage.setImageBitmap(decodedByte);
+                    }
 
                     SharedPreferences sp = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("developer_skills", freelancer.getSkills());
                     editor.apply();
-
 
                     // Hide progress bar & show profile content
                     progressBar.setVisibility(View.GONE);
@@ -156,8 +161,4 @@ public class developer_profile extends Fragment {
     private String getValidString(String value) {
         return value != null ? value : "N/A";
     }
-
-
-
-
 }

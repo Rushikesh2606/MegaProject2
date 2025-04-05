@@ -277,11 +277,11 @@ public class register extends AppCompatActivity {
 
         return true;
     }
+
     @Override
     public void onBackPressed() {
-        Intent i=new Intent(register.this,signup.class);
+        Intent i = new Intent(register.this, signup.class);
         startActivity(i);
         super.onBackPressed();
-
     }
 }
