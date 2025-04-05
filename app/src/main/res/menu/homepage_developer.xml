@@ -41,5 +41,11 @@ android:icon="@drawable/chat"
         android:id="@+id/appLogOut"
         android:icon="@drawable/logout_1"
         android:title="Log Out" />
+    <item
+        android:id="@+id/uploadproject"
+        android:orderInCategory="100"
+        android:title="Upload Project"
+        android:icon="@drawable/phone1"
+        app:showAsAction="never" />
 
 </menu>

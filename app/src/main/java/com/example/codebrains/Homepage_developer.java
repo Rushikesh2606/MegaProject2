@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.codebrains.analyzer.pythoncode;
 import com.example.codebrains.freelancer.FindjobActivity;
 import com.example.codebrains.messaging.Chat;
 import com.example.codebrains.services.FirebaseConnectionService;
@@ -76,9 +77,13 @@ public class Homepage_developer extends AppCompatActivity {
                 } else if (id == R.id.findjob) {
                     Intent i=new Intent(Homepage_developer.this, FindjobActivity.class);
                     startActivity(i);
-                } else if (id == R.id.evaluate_project) {
-                    // TODO: Handle evaluate_project manually or navigate to its destination.
-                    handled = true;
+                } else if (id == R.id.evaluate_project ) {
+                    Intent i=new Intent(Homepage_developer.this, pythoncode.class);
+                    startActivity(i);
+                       handled = true;
+                } else if (id == R.id.uploadproject) {
+Intent i=new Intent(Homepage_developer.this,JobListActivity.class);
+startActivity(i);
                 } else if (id == R.id.chat) {
                     Intent i=new Intent(Homepage_developer.this, Chat.class);
                     startActivity(i);

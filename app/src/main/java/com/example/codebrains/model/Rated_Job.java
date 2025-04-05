@@ -1,17 +1,30 @@
-package com.example.codebrains.messaging;
+package com.example.codebrains.model;
 
 public class Rated_Job {
+
+
     long timestamp;
     String JobId;
     String Feedback;
 
+    int rating;
+
     public Rated_Job() {
     }
 
-    public Rated_Job(long timestamp, String jobId, String feedback) {
+    public Rated_Job(long timestamp, String jobId, String feedback,int rating) {
         this.timestamp = timestamp;
         JobId = jobId;
         Feedback = feedback;
+        this.rating=rating;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public long getTimestamp() {

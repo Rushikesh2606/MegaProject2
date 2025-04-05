@@ -5,16 +5,19 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:allowBackup="true"
@@ -28,21 +31,26 @@
         android:theme="@style/Theme.CodeBrains"
         tools:targetApi="31">
         <activity
+            android:name=".JobListActivity"
+            android:exported="false" />
+        <activity
             android:name=".payment1"
             android:exported="false" />
 
         <service
             android:name=".JobNotificationService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:enabled="true" />
         <service
             android:name=".services.FirebaseProposalListenerService"
             android:exported="false" />
-        <service android:name=".services.FirebaseConnectionService"
-            android:exported="false"/>
-        <service android:name=".services.FirebaseMessageListenerService"
-            android:exported="false"/>
+        <service
+            android:name=".services.FirebaseConnectionService"
+            android:exported="false" />
+        <service
+            android:name=".services.FirebaseMessageListenerService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
         <activity
             android:name=".messaging.Chat"
             android:exported="false" />
@@ -57,6 +65,12 @@
             android:exported="false" />
         <activity
             android:name=".BidActivity"
+            android:exported="false" />
+        <activity
+            android:name=".analyzer.pythoncode"
+            android:exported="false" />
+        <activity
+            android:name=".analyzer.Analyzer"
             android:exported="false" />
         <activity
             android:name=".freelancer.JobDetailActivity"
