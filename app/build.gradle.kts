@@ -4,6 +4,7 @@ plugins {
     id("com.chaquo.python")
 }
 
+
 android {
     namespace = "com.example.codebrains"
     compileSdk = 34
@@ -53,6 +54,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.navigation:navigation-fragment:2.6.0")
     implementation("androidx.navigation:navigation-ui:2.6.0")
+
     implementation("androidx.activity:activity:1.9.3")
     implementation("com.google.android.gms:play-services-tasks:18.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

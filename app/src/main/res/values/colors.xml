@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -27,6 +28,17 @@
     <color name="colorAccent">#4CAF50</color>
     <color name="colorReopenButton">#2E7D32</color>
     <!-- Red color definitions (if used elsewhere) -->
+
+    <color name="green_10">#1A1EB980</color>
+    <color name="green_dark">#0E8B5F</color>
+    <color name="background">#F5F7FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider">#E0E0E0</color>
+
+
+
 
 
 </resources>

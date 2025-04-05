@@ -97,4 +97,9 @@
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
     </style>
 
+
+    <style name="App.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/green_10</item>
+    </style>
+
 </resources>
