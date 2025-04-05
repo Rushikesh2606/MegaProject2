@@ -1,5 +1,7 @@
 package com.example.codebrains;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +25,11 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
     private List<Proposal> proposalsList;
     private FirebaseAuth mAuth;
     private DatabaseReference connectionsRef;
+    private Context context;
 
-    public ProposalsAdapter(List<Proposal> proposalsList) {
+    public ProposalsAdapter(List<Proposal> proposalsList, Context context) {
         this.proposalsList = proposalsList;
+        this.context = context;
         mAuth = FirebaseAuth.getInstance();
         connectionsRef = FirebaseDatabase.getInstance().getReference("Connections");
     }
@@ -33,8 +37,7 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_proposal, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_proposal, parent, false);
         return new ViewHolder(view);
     }
 
@@ -52,82 +55,83 @@ public class ProposalsAdapter extends RecyclerView.Adapter<ProposalsAdapter.View
             if (clientId == null) return;
 
             String jobId = proposal.getJobId();
+            String selectedPrice = proposal.getPrice();
 
-            // 1. Create connection entry
-            String connectionId = connectionsRef.push().getKey();
-            if (connectionId == null) return;
+            // 1. Delete all proposals for this job
+            DatabaseReference proposalsRef = FirebaseDatabase.getInstance().getReference("proposals");
+            proposalsRef.get().addOnSuccessListener(snapshot -> {
+                for (DataSnapshot proposalSnap : snapshot.getChildren()) {
+                    String proposalJobId = proposalSnap.child("jobId").getValue(String.class);
+                    if (jobId.equals(proposalJobId)) {
+                        proposalSnap.getRef().removeValue();
+                    }
+                }
 
-            Connection connection = new Connection(
-                    connectionId,
-                    clientId,
-                    proposal.getFreelancerId(),
-                    jobId,
-                    "pending"
-                    ,System.currentTimeMillis()
-            );
+                // 2. Create a connection
+                String connectionId = connectionsRef.push().getKey();
+                if (connectionId == null) return;
 
-            connectionsRef.child(connectionId).setValue(connection)
-                    .addOnSuccessListener(aVoid -> {
-                        // 2. Delete all proposals with same jobId
-                        DatabaseReference proposalsRef = FirebaseDatabase.getInstance().getReference("proposals");
-                        proposalsRef.get().addOnSuccessListener(snapshot -> {
-                            for (DataSnapshot proposalSnap : snapshot.getChildren()) {
-                                String proposalJobId = proposalSnap.child("jobId").getValue(String.class);
-                                if (jobId.equals(proposalJobId)) {
-                                    proposalSnap.getRef().removeValue();
-                                }
-                            }
+                Connection connection = new Connection(
+                        connectionId,
+                        clientId,
+                        proposal.getFreelancerId(),
+                        jobId,
+                        "pending",
+                        System.currentTimeMillis()
+                );
 
-                            // 3. Update job status to "in_progress"
+                connectionsRef.child(connectionId).setValue(connection)
+                        .addOnSuccessListener(aVoid -> {
+                            // 3. Update job status and budget
                             DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("jobs");
                             jobsRef.child(jobId).child("status").setValue("in_progress");
-// Update freelancer stats
+                            jobsRef.child(jobId).child("budget").setValue(selectedPrice);
+                            jobsRef.child(jobId).child("freelancer").setValue(proposal.getFreelancerId()); // 👈 This adds the freelancerId
+
+
+                            // 4. Update freelancer stats
                             String freelancerId = proposal.getFreelancerId();
                             DatabaseReference freelancerRef = FirebaseDatabase.getInstance().getReference("freelancer").child(freelancerId);
-
                             freelancerRef.get().addOnSuccessListener(freelancerSnap -> {
-                                if (freelancerSnap.exists()) {
-                                    long freelancerInProgress = 0;
-
-                                    if (freelancerSnap.hasChild("in_progress")) {
-                                        freelancerInProgress = freelancerSnap.child("in_progress").getValue(Long.class);
-                                    }
-
-                                    freelancerRef.child("in_progress").setValue(freelancerInProgress + 1);
+                                long freelancerInProgress = 0;
+                                if (freelancerSnap.hasChild("in_progress")) {
+                                    freelancerInProgress = freelancerSnap.child("in_progress").getValue(Long.class);
                                 }
+                                freelancerRef.child("in_progress").setValue(freelancerInProgress + 1);
                             });
 
-                            // 4. Update user stats
+                            // 5. Update client stats
                             DatabaseReference clientRef = FirebaseDatabase.getInstance().getReference("user").child(clientId);
                             clientRef.get().addOnSuccessListener(clientSnap -> {
-                                if (clientSnap.exists()) {
-                                    long totalJobs = 0;
-                                    long inProgress = 0;
+                                long totalJobs = 0;
+                                long inProgress = 0;
 
-                                    if (clientSnap.hasChild("total_jobs")) {
-                                        totalJobs = clientSnap.child("total_jobs").getValue(Long.class);
-                                    }
-                                    if (clientSnap.hasChild("in_progress")) {
-                                        inProgress = clientSnap.child("in_progress").getValue(Long.class);
-                                    }
-
-                                    clientRef.child("total_jobs").setValue(Math.max(0, totalJobs - 1));
-                                    clientRef.child("in_progress").setValue(inProgress + 1);
+                                if (clientSnap.hasChild("total_jobs")) {
+                                    totalJobs = clientSnap.child("total_jobs").getValue(Long.class);
                                 }
+                                if (clientSnap.hasChild("in_progress")) {
+                                    inProgress = clientSnap.child("in_progress").getValue(Long.class);
+                                }
+
+                                clientRef.child("total_jobs").setValue(Math.max(0, totalJobs - 1));
+                                clientRef.child("in_progress").setValue(inProgress + 1);
                             });
+
+                            // 6. Start payment activity
+                            Intent intent = new Intent(context, payment1.class);
+                            intent.putExtra("price", selectedPrice);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
                         });
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firebase", "Failed to create connection: " + e.getMessage());
-                    });
+            });
         });
 
         holder.viewProfile.setOnClickListener(v -> {
-            // TODO: Implement view profile functionality
+            // TODO: Implement view profile
         });
 
         holder.message.setOnClickListener(v -> {
-            // TODO: Implement messaging functionality
+            // TODO: Implement messaging
         });
     }
 

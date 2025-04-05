@@ -45,7 +45,7 @@ public class ProposalsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         proposalsList = new ArrayList<>();
-        proposalsAdapter = new ProposalsAdapter(proposalsList);
+        proposalsAdapter = new ProposalsAdapter(proposalsList,getContext());
         recyclerView.setAdapter(proposalsAdapter);
 
         proposalsRef = FirebaseDatabase.getInstance().getReference("proposals");

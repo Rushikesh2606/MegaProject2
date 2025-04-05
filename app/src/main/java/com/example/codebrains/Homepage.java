@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.codebrains.job.JobActivity;
 import com.example.codebrains.services.FirebaseConnectionService;
-import com.example.codebrains.services.FirebaseMessageListenerService;
 import com.example.codebrains.services.FirebaseProposalListenerService;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,7 +25,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.codebrains.databinding.ActivityHomepageBinding;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -162,8 +159,6 @@ public class Homepage extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Intent serviceIntent = new Intent(this, FirebaseMessageListenerService.class);
-        stopService(serviceIntent);
         Intent serviceIntent1 = new Intent(this, FirebaseConnectionService.class);
         stopService(serviceIntent1);
         Intent serviceIntent2 = new Intent(this, FirebaseProposalListenerService.class);

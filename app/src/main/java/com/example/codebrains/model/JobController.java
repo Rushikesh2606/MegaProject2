@@ -21,10 +21,18 @@ public class JobController {
 
     private String postedDate;
     private long postedTimestamp; // Added timestamp field
-
+private String freelancer;
 
     // Default constructor
     public JobController() {}
+
+    public String getFreelancer() {
+        return freelancer;
+    }
+
+    public void setFreelancer(String freelancer) {
+        this.freelancer = freelancer;
+    }
 
     public String getProjectVisibility() {
         return projectVisibility;
