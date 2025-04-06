@@ -161,4 +161,6 @@ public class developer_profile extends Fragment {
     private String getValidString(String value) {
         return value != null ? value : "N/A";
     }
+
+
 }

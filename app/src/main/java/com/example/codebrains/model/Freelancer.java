@@ -1,75 +1,102 @@
 package com.example.codebrains.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Freelancer {
-    // Corrected field names (match Firebase keys)
-    String profession, desc, passout, degree, language, institute, availability,
-            skills, tagLine, tools, yearsOfExperience, firstName, lastName,
-            email, password, country, username, dob, contactNo, gender;
-    int total_jobs, in_progress, completed, pending;
+    // Fields
+    String id;
+    String profession;
+    String desc;
+    String passout;
+    String degree;
+    String language;
+    String institute;
+    String availability;
+    String skills;
+    String tagLine;
+    String tools;
+    String yearsOfExperience;
+    String firstName;
+    String lastName;
+    String email;
+    String password;
+    String country;
+    String username;
+    String dob;
+    String gender;
+    String contactNo;
+    int pending;
+    int in_progress;
+    int completed;
+    int total_jobs;
     long timestamp;
     float rating;
-String profileImage;
-    public Freelancer() {
+    String profileImage;
+
+    // Default constructor
+    public Freelancer() {}
+    // Add this inside your Freelancer.java
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("passout", passout);
+        map.put("degree", degree);
+        map.put("language", language);
+        map.put("institute", institute);
+        map.put("availability", availability);
+        return map;
     }
 
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public Freelancer(String profession, String desc, String passout, String degree,
-                      String language, String institute, String availability,
-                      String skills, String tagLine, String tools,
-                      String yearsOfExperience, String firstName, String lastName,
-                      String email, String password, String country, String username,
-                      String dob, String gender, String contactNo,
-                      int pending, int in_progress, int completed, int total_jobs,String profileImage) {
-        this.profession = profession;
-        this.desc = desc;
-        this.passout = passout;
-        this.degree = degree;
-        this.language = language;
-        this.institute = institute;
-        this.availability = availability;
-        this.skills = skills;
-        this.tagLine = tagLine;
-        this.tools = tools;
-        this.yearsOfExperience = yearsOfExperience;
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
         this.dob = dob;
-        this.gender = gender;
-        this.contactNo = contactNo;
-        this.pending = pending;
-        this.in_progress = in_progress;
-        this.completed = completed;
-        this.total_jobs = total_jobs;
-        this.timestamp=0;
-        this.rating=0;
-        this.profileImage=profileImage;
-    }
-
-    public String getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getGender() {
@@ -88,12 +115,12 @@ String profileImage;
         this.contactNo = contactNo;
     }
 
-    public int getTotal_jobs() {
-        return total_jobs;
+    public int getPending() {
+        return pending;
     }
 
-    public void setTotal_jobs(int total_jobs) {
-        this.total_jobs = total_jobs;
+    public void setPending(int pending) {
+        this.pending = pending;
     }
 
     public int getIn_progress() {
@@ -112,12 +139,80 @@ String profileImage;
         this.completed = completed;
     }
 
-    public int getPending() {
-        return pending;
+    public int getTotal_jobs() {
+        return total_jobs;
     }
 
-    public void setPending(int pending) {
-        this.pending = pending;
+    public void setTotal_jobs(int total_jobs) {
+        this.total_jobs = total_jobs;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    // Constructor for initial registration data
+    public Freelancer(String id, String firstName, String lastName, String email, String password, String country, String username, String dob, String gender, String contactNo, String profileImage) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.username = username;
+        this.dob = dob;
+        this.gender = gender;
+        this.contactNo = contactNo;
+        this.profileImage = profileImage;
+    }
+
+    // Constructor for additional data from freelancer_form1
+    public Freelancer( String desc, String yearsOfExperience, String tools, String skills, String tagLine) {
+
+        this.desc = desc;
+        this.yearsOfExperience = yearsOfExperience;
+        this.tools = tools;
+        this.skills = skills;
+        this.tagLine = tagLine;
+    }
+
+    // Constructor for final data from freelancer_register
+    public Freelancer(String id, String passout, String degree, String language, String institute, String availability) {
+        this.id = id;
+        this.passout = passout;
+        this.degree = degree;
+        this.language = language;
+        this.institute = institute;
+        this.availability = availability;
+    }
+
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getProfession() {
@@ -128,14 +223,6 @@ String profileImage;
         this.profession = profession;
     }
 
-    public String getPassout() {
-        return passout;
-    }
-
-    public void setPassout(String passout) {
-        this.passout = passout;
-    }
-
     public String getDesc() {
         return desc;
     }
@@ -144,12 +231,12 @@ String profileImage;
         this.desc = desc;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getPassout() {
+        return passout;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setPassout(String passout) {
+        this.passout = passout;
     }
 
     public String getDegree() {
@@ -158,6 +245,14 @@ String profileImage;
 
     public void setDegree(String degree) {
         this.degree = degree;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getInstitute() {
@@ -210,57 +305,6 @@ String profileImage;
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
+        // Other getters and setters...
     }
 }

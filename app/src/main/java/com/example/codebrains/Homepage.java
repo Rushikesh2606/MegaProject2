@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,107 +31,95 @@ public class Homepage extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomepageBinding binding;
-    FirebaseAuth auth;
-    FirebaseDatabase database;
-    String profession;
+    private FirebaseAuth auth;
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Inflate the binding layout
         binding = ActivityHomepageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        initializeFirebase();
+        setupToolbar();
+        setupFloatingActionButton();
+        setupNavigation();
+    }
+
+    private void initializeFirebase() {
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
+    }
 
-        // Set up the toolbar
+    private void setupToolbar() {
         setSupportActionBar(binding.appBarHomepage.toolbar);
+    }
 
-        // Set up the floating action button
-        binding.appBarHomepage.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Homepage.this, AIchatbot.class);
-                startActivity(intent);
-
-            }
+    private void setupFloatingActionButton() {
+        binding.appBarHomepage.fab.setOnClickListener(view -> {
+            startActivity(new Intent(Homepage.this, AIchatbot.class));
         });
+    }
 
-        // Set up drawer layout and navigation view
+    private void setupNavigation() {
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-        // Configure the AppBar with top-level destinations
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
 
-        // Set up navigation controller
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_homepage);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Handle navigation drawer item clicks manually where needed
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            DrawerLayout drawerLayout = binding.drawerLayout;
 
-                if (id == R.id.nav_contact_us) {
-                    // Navigate to the Contact Us page using the no-argument constructor.
-                    Contactus contactusFragment = new Contactus();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment_content_homepage, contactusFragment)
-                            .commit();
-                    drawer.closeDrawers();
-                    return true;
-                } else if (id == R.id.nav_home) {
-                    // Navigate to the Home Fragment
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.nav_host_fragment_content_homepage, new HomeFragment());
-                    ft.commit();
-                    drawer.closeDrawers();
-                    return true;
-                } else if (id == R.id.nav_profile) {
-                    // Navigate to the Profile Fragment
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.nav_host_fragment_content_homepage, new ProfileFragment());
-                    ft.commit();
-                    drawer.closeDrawers();
-                    return true;
-                }else if (id == R.id.post) {
-                    // Navigate to the Profile Fragment
-                   Intent intent=new Intent(Homepage.this,JobpostingActivity.class);
-                   startActivity(intent);
-
-                } else if (id==R.id.chat) {
-                    Intent i=new Intent(Homepage.this, Chat.class);
-                    startActivity(i);
-                }else if (id==R.id.appLogOut) {
-                    permanentLogout();
-
-                }
-
-                // Default behavior for other menu items
-                return NavigationUI.onNavDestinationSelected(item, navController)
-                        || Homepage.super.onOptionsItemSelected(item);
+            if (id == R.id.post) {
+                startActivity(new Intent(this, JobpostingActivity.class));
+                drawerLayout.closeDrawers();
+                return true;
+            } else if (id == R.id.chat) {
+                startActivity(new Intent(this, Chat.class));
+                drawerLayout.closeDrawers();
+                return true;
+            } else if (id == R.id.appLogOut) {
+                permanentLogout();
+                drawerLayout.closeDrawers();
+                return true;
             }
-        });
-    }
+            else if (id == R.id.nav_profile) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_homepage, new ProfileFragment())
+                        .commit();
+                return true;
+            }
+            else if (id == R.id.nav_contact_us) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_homepage, new Contactus())
+                        .commit();
+                return true;
+            }
+            else if (id == R.id.nav_home) {
 
-    private void processProfession(String profession) {
-        this.profession = profession;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_homepage, new HomeFragment())
+                        .commit();
+                return true;
+            }
+
+            // Let NavigationUI handle other navigation items
+            return NavigationUI.onNavDestinationSelected(item, navController)
+                    || super.onOptionsItemSelected(item);
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if present.
         getMenuInflater().inflate(R.menu.homepage, menu);
         return true;
     }
@@ -145,26 +132,21 @@ public class Homepage extends AppCompatActivity {
     }
 
     public void joblistbtn(View view) {
-        Intent intent=new Intent(Homepage.this , JobActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, JobActivity.class));
     }
 
-    public void permanentLogout() {
+    private void permanentLogout() {
         FirebaseAuth.getInstance().signOut();
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        startActivity(new Intent(this, login.class));
+        Intent intent = new Intent(this, login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 
     @Override
     protected void onDestroy() {
-        Intent serviceIntent1 = new Intent(this, FirebaseConnectionService.class);
-        stopService(serviceIntent1);
-        Intent serviceIntent2 = new Intent(this, FirebaseProposalListenerService.class);
-        stopService(serviceIntent2);
-
-
+        stopService(new Intent(this, FirebaseConnectionService.class));
+        stopService(new Intent(this, FirebaseProposalListenerService.class));
         super.onDestroy();
     }
 }

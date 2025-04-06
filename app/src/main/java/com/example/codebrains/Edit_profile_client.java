@@ -1,27 +1,18 @@
 package com.example.codebrains;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,15 +20,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,33 +37,43 @@ public class Edit_profile_client extends Fragment {
     private Spinner countrySpinner;
     private CircleImageView profileImage;
     private Button btnUploadPhoto, btnSave;
-    ArrayList<String> countryList;
-    ProgressBar progress;
-    ScrollView scroll;
+    private ProgressBar progress;
+    private ScrollView scroll;
 
     private static final int CAMERA_REQ = 100, GALLERY_REQ = 200;
+    private Uri selectedImageUri;
+    private Bitmap selectedBitmap;
+    private boolean imageChanged = false;
+
+    private ArrayList<String> countryList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_profile_client, container, false);
         initialize(view);
 
         mAuth = FirebaseAuth.getInstance();
-        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        currentUser = mAuth.getCurrentUser();
 
-        if (currentUserId == null) {
+        if (currentUser == null) {
             Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
             return view;
         }
 
+        String currentUserId = currentUser.getUid();
         userRef = FirebaseDatabase.getInstance().getReference("user").child(currentUserId);
-        scroll.setVisibility(View.GONE);
 
+        scroll.setVisibility(View.GONE);
         fetchClientData();
 
         btnUploadPhoto.setOnClickListener(v -> selectPic());
-        btnSave.setOnClickListener(v -> saveProfile());
+        btnSave.setOnClickListener(v -> {
+            if (imageChanged) {
+                uploadProfileImageAndSave();
+            } else {
+                saveProfile(null);
+            }
+        });
 
         return view;
     }
@@ -93,56 +89,17 @@ public class Edit_profile_client extends Fragment {
         profileImage = view.findViewById(R.id.client_profile_image);
         btnUploadPhoto = view.findViewById(R.id.btn_upload_photo);
         btnSave = view.findViewById(R.id.btn_save);
-        progress=view.findViewById(R.id.progress_bar);
-scroll= view.findViewById(R.id.scroll);
-        countryList = new ArrayList<>(Arrays.asList(
-                "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
-                "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
-                "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
-                "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-                "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
-                "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
-                "Cameroon", "Canada", "Central African Republic", "Chad", "Chile",
-                "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica",
-                "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark",
-                "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
-                "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (fmr. \"Swaziland\")",
-                "Ethiopia", "Fiji", "Finland", "France", "Gabon",
-                "Gambia", "Georgia", "Germany", "Ghana", "Greece",
-                "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
-                "Haiti", "Holy See", "Honduras", "Hungary", "Iceland",
-                "India", "Indonesia", "Iran", "Iraq", "Ireland",
-                "Israel", "Italy", "Jamaica", "Japan", "Jordan",
-                "Kazakhstan", "Kenya", "Kiribati", "Korea (North)", "Korea (South)",
-                "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon",
-                "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
-                "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives",
-                "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius",
-                "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
-                "Montenegro", "Morocco", "Mozambique", "Myanmar (formerly Burma)", "Namibia",
-                "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua",
-                "Niger", "Nigeria", "North Macedonia (formerly Macedonia)", "Norway", "Oman",
-                "Pakistan", "Palau", "Palestine State", "Panama", "Papua New Guinea",
-                "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
-                "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
-                "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
-                "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone",
-                "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
-                "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan",
-                "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan",
-                "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
-                "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
-                "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America",
-                "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam",
-                "Yemen", "Zambia", "Zimbabwe"
-        ));
+        progress = view.findViewById(R.id.progress_bar);
+        scroll = view.findViewById(R.id.scroll);
 
-        ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, countryList);
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        countrySpinner.setAdapter(countryAdapter);
+        countryList = new ArrayList<>(Arrays.asList(Locale.getISOCountries()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, countryList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countrySpinner.setAdapter(adapter);
     }
 
     private void fetchClientData() {
+        progress.setVisibility(View.VISIBLE);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -151,9 +108,6 @@ scroll= view.findViewById(R.id.scroll);
                     return;
                 }
 
-                Log.d("FirebaseData", snapshot.toString());
-
-                // Map data to Client object
                 client client = snapshot.getValue(client.class);
 
                 if (client != null && getActivity() != null) {
@@ -164,92 +118,116 @@ scroll= view.findViewById(R.id.scroll);
                     dob.setText(getValidString(client.getDob()));
                     password.setText(getValidString(client.getPassword()));
 
+                    int index = countryList.indexOf(client.getCountry());
+                    if (index >= 0) countrySpinner.setSelection(index);
 
-
-                    int countryIndex = countryList.indexOf(client.getCountry());
-                    if (countryIndex >= 0) {
-                        countrySpinner.setSelection(countryIndex);
+                    // Load base64 image if exists
+                    if (client.getProfileImage() != null && !client.getProfileImage().isEmpty()) {
+                        try {
+                            byte[] decodedBytes = android.util.Base64.decode(client.getProfileImage(), android.util.Base64.DEFAULT);
+                            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                            profileImage.setImageBitmap(decodedBitmap);
+                        } catch (Exception e) {
+                            Toast.makeText(getContext(), "Failed to load profile image", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
                     }
+
                     scroll.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), "Profile data loaded successfully", Toast.LENGTH_SHORT).show();
                 }
+
+                progress.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String getValidString(String value) {
-        return value != null ? value : "N/A";
-    }
-
-    private void saveProfile() {
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String userId = currentUser.getUid();
-            HashMap<String, Object> updatedData = new HashMap<>();
-            updatedData.put("firstName", firstName.getText().toString());
-            updatedData.put("lastName", lastName.getText().toString());
-            updatedData.put("email", email.getText().toString());
-            updatedData.put("contactNo", contactNo.getText().toString());
-            updatedData.put("dob", dob.getText().toString());
-            updatedData.put("password", password.getText().toString());
-            updatedData.put("country", countrySpinner.getSelectedItem().toString());
-
-            userRef.updateChildren(updatedData).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d("FirebaseUpdate", "Profile updated successfully");
-                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Exception e = task.getException();
-                    Log.e("FirebaseUpdate", "Update failed", e);
-                    Toast.makeText(getContext(), "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
     private void selectPic() {
-        AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
-        ad.setIcon(R.drawable.baseline_account_circle_24);
-        ad.setTitle("Profile Picture ");
-        ad.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(Intent.ACTION_PICK);
-                i.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, GALLERY_REQ);
-            }
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle("Profile Picture");
+        dialog.setIcon(R.drawable.baseline_account_circle_24);
+        dialog.setNegativeButton("Gallery", (d, i) -> {
+            Intent pick = new Intent(Intent.ACTION_PICK);
+            pick.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(pick, GALLERY_REQ);
         });
-        ad.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(i, CAMERA_REQ);
-            }
+        dialog.setPositiveButton("Camera", (d, i) -> {
+            Intent capture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(capture, CAMERA_REQ);
         });
-        ad.show();
+        dialog.show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_REQ) {
-                // Get the image from the camera
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                profileImage.setImageBitmap(photo);  // Convert Bitmap to Uri
-            } else if (requestCode == GALLERY_REQ) {
-                // Get the image from the gallery
-                Uri selectedImage = data.getData();
-                profileImage.setImageURI(selectedImage);
+        if (resultCode == RESULT_OK && data != null) {
+            imageChanged = true;
+            if (requestCode == GALLERY_REQ) {
+                selectedImageUri = data.getData();
+                profileImage.setImageURI(selectedImageUri);
+            } else if (requestCode == CAMERA_REQ) {
+                selectedBitmap = (Bitmap) data.getExtras().get("data");
+                profileImage.setImageBitmap(selectedBitmap);
             }
         }
     }
 
+    private void uploadProfileImageAndSave() {
+        progress.setVisibility(View.VISIBLE);
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            if (selectedBitmap != null) {
+                selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            } else if (selectedImageUri != null) {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            }
+
+            byte[] imageBytes = baos.toByteArray();
+            String base64Image = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+
+            saveProfile(base64Image);
+
+        } catch (Exception e) {
+            progress.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Image processing failed", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void saveProfile(@Nullable String imageBase64) {
+        String uid = currentUser.getUid();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("firstName", firstName.getText().toString());
+        map.put("lastName", lastName.getText().toString());
+        map.put("email", email.getText().toString());
+        map.put("contactNo", contactNo.getText().toString());
+        map.put("dob", dob.getText().toString());
+        map.put("password", password.getText().toString());
+        map.put("country", countrySpinner.getSelectedItem().toString());
+
+        if (imageBase64 != null) {
+            map.put("profileImage", imageBase64);
+        }
+
+        userRef.updateChildren(map).addOnCompleteListener(task -> {
+            progress.setVisibility(View.GONE);
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Update failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String getValidString(String value) {
+        return value != null ? value : "";
+    }
 }

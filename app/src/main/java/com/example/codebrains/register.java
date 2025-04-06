@@ -1,9 +1,7 @@
 package com.example.codebrains;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,25 +9,21 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.codebrains.freelancer.freelancer_form1;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.codebrains.model.Freelancer;
+import com.example.codebrains.model.User;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,250 +32,300 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class register extends AppCompatActivity {
-    Button btn_profile, btn_register;
-    ArrayList<String> gender = new ArrayList<>();
-    AutoCompleteTextView spinner;
-    RadioGroup radiogrp;
-    EditText dob, username, password, rePassword, contactNo;
-    private static final int CAMERA_REQ = 100, GALLERY_REQ = 200;
-    private Bitmap profileImageBitmap;  // Changed to Bitmap
 
-    FirebaseAuth auth;
-    FirebaseDatabase database;
+    private TextInputEditText edtUsername, edtPassword, edtRePassword, edtContact, edtDob;
+    private AutoCompleteTextView genderSpinner;
+    private RadioGroup roleRadioGroup;
+    private MaterialButton btnProfile, btnRegister;
+    RadioGroup rdb;
+    private Bitmap profileImageBitmap;
 
-    @SuppressLint("MissingInflatedId")
+    private static final int CAMERA_REQUEST = 100;
+    private static final int GALLERY_REQUEST = 200;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Firebase Initialization
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+        // Initialize Firebase
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Retrieving data from the previous activity (Intent)
-        String surname = getIntent().getStringExtra("last_name");
-        String name = getIntent().getStringExtra("first_name");
-        String email = getIntent().getStringExtra("email");
-        String country = getIntent().getStringExtra("country");
+        // Get data from previous activity
+        Intent intent = getIntent();
+        String firstName = intent.getStringExtra("first_name");
+        String lastName = intent.getStringExtra("last_name");
+        String email = intent.getStringExtra("email");
+        String country = intent.getStringExtra("country");
 
-        // Initialize views
-        btn_profile = findViewById(R.id.btn_profile);
-        btn_register = findViewById(R.id.btn_register);
-        dob = findViewById(R.id.edt_dob);
-        username = findViewById(R.id.edt_username);
-        password = findViewById(R.id.edt_password);
-        rePassword = findViewById(R.id.edt_reenter_password);
-        contactNo = findViewById(R.id.edt_contact_no);
-        radiogrp = findViewById(R.id.radiogrp);
+        initializeViews();
+        setupGenderSpinner();
+        setupDatePicker();
+        setupButtons(firstName, lastName, email, country);
+    }
 
-        // DatePicker logic for Date of Birth
-        dob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private void initializeViews() {
+        edtUsername = findViewById(R.id.edt_username);
+        edtPassword = findViewById(R.id.edt_password);
+        edtRePassword = findViewById(R.id.edt_reenter_password);
+        edtContact = findViewById(R.id.edt_contact_no);
+        edtDob = findViewById(R.id.edt_dob);
+        genderSpinner = findViewById(R.id.spinner);
+        roleRadioGroup = findViewById(R.id.radiogrp);
+        btnProfile = findViewById(R.id.btn_profile);
+        btnRegister = findViewById(R.id.btn_register);
+    }
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(register.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                                dob.setText(selectedDate);
-                            }
-                        }, year, month, day);
-                datePickerDialog.show();
-            }
+    private void setupGenderSpinner() {
+        ArrayList<String> genders = new ArrayList<>();
+        genders.add("Male");
+        genders.add("Female");
+        genders.add("Other");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1
+        );
+        genderSpinner.setAdapter(adapter);
+    }
+
+    private void setupDatePicker() {
+        edtDob.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    register.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        edtDob.setText(date);
+                    },
+                    year, month, day
+            );
+            datePicker.show();
         });
+    }
 
-        // Profile Picture Logic
-        btn_profile.setOnClickListener(new View.OnClickListener() {
+    private void setupButtons(String firstName, String lastName, String email, String country) {
+        btnProfile.setOnClickListener(v -> showImagePickerDialog());
+
+        roleRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(register.this);
-                ad.setIcon(R.drawable.baseline_account_circle_24);
-                ad.setTitle("Profile Picture ");
-                ad.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_PICK);
-                        i.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(i, GALLERY_REQ);
-                    }
-                });
-                ad.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(i, CAMERA_REQ);
-                    }
-                });
-                ad.show();
-            }
-        });
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Find the RadioButton that was clicked
+                RadioButton rdb = findViewById(checkedId);
 
-        // Gender Spinner Setup
-        spinner = findViewById(R.id.spinner);
-        gender.add("Male");
-        gender.add("Female");
-        ArrayAdapter<String> gender_aa = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
-        spinner.setAdapter(gender_aa);
-
-        // Register Button Logic
-        btn_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields()) {
-                    String pass = password.getText().toString();
-                    String uname = username.getText().toString();
-                    String date = dob.getText().toString();
-                    String contact = contactNo.getText().toString();
-                    String spin = spinner.getText().toString();
-                    String profile_base64 = "";
-
-                    if (profileImageBitmap != null) {
-                        profile_base64 = bitmapToBase64(profileImageBitmap);
-                    }
-
-                    // Listen to the radio group to check the selected role
-                    int selectedId = radiogrp.getCheckedRadioButtonId();
-                    if (selectedId == R.id.freelancer) {
-                        Bundle bundle = new Bundle();
-                        // Create the intent to send data to freelancer_form1
-                        Intent i = new Intent(register.this, freelancer_form1.class);
-                        bundle.putString("first_name", name);
-                        bundle.putString("last_name", surname);
-                        bundle.putString("email", email);
-                        bundle.putString("password", pass);
-                        bundle.putString("country", country);
-                        bundle.putString("username", uname);
-                        bundle.putString("dob", date);
-                        bundle.putString("contact_no", contact);
-                        bundle.putString("gender", spin);
-                        bundle.putString("profile_image_base64", profile_base64);
-
-                        i.putExtras(bundle);
-                        startActivity(i);
-                    } else {
-                        // Register as a client
-                        String finalProfile_base6 = profile_base64;
-                        auth.createUserWithEmailAndPassword(email, pass)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            String id = task.getResult().getUser().getUid();
-                                            DatabaseReference reference = database.getReference().child("user").child(id);
-
-                                            // Create a client object
-                                            client user = new client(name, surname, email, pass, country, uname, contact, spin, "Client", finalProfile_base6, date, 0, 0, 0, 0);
-
-                                            reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Intent i = new Intent(register.this, MainActivity2.class);
-                                                        startActivity(i);
-                                                        finish();
-                                                    } else {
-                                                        Toast.makeText(register.this, "Error in creating a user", Toast.LENGTH_SHORT).show();
-                                                        Log.e("RegistrationError", task.getException().getMessage());
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            Toast.makeText(register.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                if (rdb != null) {
+                    // Handle the selected radio button
+                    if (checkedId == R.id.freelancer) {
+                           registerFreelancer(firstName,lastName,email,country);
+                    } else if (checkedId == R.id.employer) {
+                        registerUser(firstName,lastName,email,country);
                     }
                 }
             }
         });
+        btnRegister.setOnClickListener(v -> {
+            if (validateForm()) {
+                registerUser(firstName, lastName, email, country);
+            }
+        });
+    }
+    private void registerFreelancer(String firstName, String lastName, String email, String country) {
+        String password = edtPassword.getText().toString().trim();
+        String username = edtUsername.getText().toString().trim();
+        String contact = edtContact.getText().toString().trim();
+        String dob = edtDob.getText().toString().trim();
+        String gender = genderSpinner.getText().toString();
+        String profileImage = "";
+
+        if (profileImageBitmap != null) {
+            profileImage = bitmapToBase64(profileImageBitmap);
+        }
+
+        String finalProfileImage = profileImage;
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            // Check which radio button is selected
+                            int selectedId = roleRadioGroup.getCheckedRadioButtonId();
+                            if (selectedId == R.id.freelancer) {
+                                // Create Freelancer object
+                                Freelancer freelancer = new Freelancer(
+                                        firebaseUser.getUid(),
+                                        firstName,
+                                        lastName,
+                                        email,
+                                        password,
+                                        country,
+                                        username,
+                                        dob,
+                                        gender,
+                                        contact,
+                                        finalProfileImage
+                                );
+
+                                // Save Freelancer object to Firebase
+                                mDatabase.child("freelancer").child(firebaseUser.getUid()).setValue(freelancer)
+                                        .addOnCompleteListener(dbTask -> {
+                                            if (dbTask.isSuccessful()) {
+                                                startActivity(new Intent(register.this, MainActivity.class));
+                                                finish();
+                                            } else {
+                                                Toast.makeText(register.this, "Registration failed: " + dbTask.getException(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else {
+                                // Handle other roles (e.g., Employer) if needed
+                                Toast.makeText(register.this, "Only Freelancer registration is supported currently.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(register.this, "Authentication failed: " + task.getException(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    // Handle image selection from gallery or camera
+    private void showImagePickerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Profile Picture");
+        builder.setItems(new String[]{"Camera", "Gallery"}, (dialog, which) -> {
+            if (which == 0) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, GALLERY_REQUEST);
+            }
+        });
+        builder.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_REQ) {
-                // Get the image from the camera
+            if (requestCode == CAMERA_REQUEST) {
                 profileImageBitmap = (Bitmap) data.getExtras().get("data");
-            } else if (requestCode == GALLERY_REQ) {
-                // Get the image from the gallery
-                Uri selectedImage = data.getData();
+            } else if (requestCode == GALLERY_REQUEST) {
                 try {
-                    profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                    Uri imageUri = data.getData();
+                    profileImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
-    // Convert Bitmap to Base64
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        if (TextUtils.isEmpty(edtUsername.getText())) {
+            edtUsername.setError("Username required");
+            isValid = false;
+        }
+
+        if (TextUtils.isEmpty(edtPassword.getText())) {
+            edtPassword.setError("Password required");
+            isValid = false;
+        } else if (edtPassword.getText().length() < 6) {
+            edtPassword.setError("Password must be at least 6 characters");
+            isValid = false;
+        }
+
+        if (!TextUtils.equals(edtPassword.getText(), edtRePassword.getText())) {
+            edtRePassword.setError("Passwords don't match");
+            isValid = false;
+        }
+
+        if (TextUtils.isEmpty(edtContact.getText())) {
+            edtContact.setError("Contact required");
+            isValid = false;
+        } else if (edtContact.getText().length() != 10) {
+            edtContact.setError("Invalid contact number");
+            isValid = false;
+        }
+
+        if (roleRadioGroup.getCheckedRadioButtonId() == -1) {
+            Toast.makeText(this, "Please select a role", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void registerUser(String firstName, String lastName, String email, String country) {
+        String password = edtPassword.getText().toString().trim();
+        String username = edtUsername.getText().toString().trim();
+        String contact = edtContact.getText().toString().trim();
+        String dob = edtDob.getText().toString().trim();
+        String gender = genderSpinner.getText().toString();
+        String profileImage = "";
+        Bundle bundle=getIntent().getExtras();
+
+        if (profileImageBitmap != null) {
+            profileImage = bitmapToBase64(profileImageBitmap);
+        }
+// public User(String id, String firstName, String lastName, String username,
+//        long timestamp,String country,String contactNo,String profileImage,String password,String email,String gender,String dob,int total_jobs,int completed,String profession,int pending,int in_progress) {
+
+        String finalProfileImage = profileImage;
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            User user = new User(
+                                    firebaseUser.getUid(),
+                                    firstName,
+                                    lastName,
+                                    username,
+                                    System.currentTimeMillis(),
+                                     country,contact, finalProfileImage,password,email,"male",dob,0,0,"Client",0,0
+                            );
+
+                            mDatabase.child("user").child(firebaseUser.getUid()).setValue(user)
+                                    .addOnCompleteListener(dbTask -> {
+                                        if (dbTask.isSuccessful()) {
+                                            startActivity(new Intent(register.this, MainActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(register.this, "Registration failed: " + dbTask.getException(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    } else {
+                        Toast.makeText(register.this, "Authentication failed: " + task.getException(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    // Validate fields before proceeding
-    private boolean validateFields() {
-        // Validate username
-        if (TextUtils.isEmpty(username.getText())) {
-            username.setError("Username is required");
-            return false;
-        }
-
-        // Validate password
-        if (TextUtils.isEmpty(password.getText())) {
-            password.setError("Password is required");
-            return false;
-        }
-
-        // Validate re-entered password
-        if (TextUtils.isEmpty(rePassword.getText())) {
-            rePassword.setError("Please re-enter the password");
-            return false;
-        } else if (!password.getText().toString().equals(rePassword.getText().toString())) {
-            rePassword.setError("Passwords do not match");
-            return false;
-        }
-
-        // Validate contact number
-        if (TextUtils.isEmpty(contactNo.getText())) {
-            contactNo.setError("Contact number is required");
-            return false;
-        } else if (contactNo.getText().toString().length() != 10) {
-            contactNo.setError("Invalid contact number");
-            return false;
-        }
-
-        // Validate gender selection
-        int selectedId = radiogrp.getCheckedRadioButtonId();
-        if (selectedId == -1) {
-            Toast.makeText(this, "Please select a role", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // Validate date of birth
-        if (TextUtils.isEmpty(dob.getText())) {
-            dob.setError("Date of birth is required");
-            return false;
-        }
-
-        return true;
-    }
-
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(register.this, signup.class);
-        startActivity(i);
         super.onBackPressed();
+        startActivity(new Intent(this, signup.class));
+        finish();
     }
 }

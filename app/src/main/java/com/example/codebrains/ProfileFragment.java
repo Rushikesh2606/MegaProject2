@@ -3,26 +3,24 @@ package com.example.codebrains;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.example.codebrains.model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,59 +29,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.util.Base64;
-
 public class ProfileFragment extends Fragment {
 
     private TextView name, email, mobile, gender, dob, total, completed, pending, welcome, in_progress;
     private CircleImageView profileImage;
     private ProgressBar progressBar;
-    private Button edit_profile_button;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
-    private LinearLayout linear;
-    private ScrollView scroll;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    private String currentUserId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Initialize Firebase
-        mAuth = FirebaseAuth.getInstance();
-        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
-
-        if (currentUserId == null) {
-            Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
-            return view;
-        }
-        Toast.makeText(getContext(), currentUserId, Toast.LENGTH_SHORT).show();
-
-        userRef = FirebaseDatabase.getInstance().getReference("user").child(currentUserId);
-
-        // Initialize views
         initializeViews(view);
-
-        // Hide profile content & show progress bar
-        scroll.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-
-        // Fetch data from Firebase
-        fetchClientData();
-
-        edit_profile_button.setOnClickListener(v -> editProfile());
+        checkAuthenticationState();
 
         return view;
-    }
-
-    private void editProfile() {
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.nav_host_fragment_content_homepage, new Edit_profile_client());
-        ft.commit();
     }
 
     private void initializeViews(View view) {
@@ -99,76 +61,139 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.profile_image);
         progressBar = view.findViewById(R.id.progress_bar);
         in_progress = view.findViewById(R.id.in_progress);
-        edit_profile_button = view.findViewById(R.id.edit_profile_button);
-        linear = view.findViewById(R.id.linear);
-        scroll = view.findViewById(R.id.scroll);
     }
 
-    private void fetchClientData() {
+    private void checkAuthenticationState() {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            redirectToLogin();
+        } else {
+            currentUserId = currentUser.getUid();
+            setupDatabaseReference();
+            fetchUserData();
+        }
+    }
+
+    private void setupDatabaseReference() {
+        userRef = FirebaseDatabase.getInstance().getReference("user").child(currentUserId);
+    }
+
+    private void fetchUserData() {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
-                    Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+
+                    showDataNotFound();
                     return;
                 }
 
-                Log.d("FirebaseData", snapshot.toString());
 
-                // Map data to Client object
-                client client = snapshot.getValue(client.class);
-
-                if (client != null && getActivity() != null) {
-                    name.setText("Name : " + getValidString(client.getFirstName()) + " " + getValidString(client.getLastName()));
-                    email.setText("Email : " + getValidString(client.getEmail()));
-                    mobile.setText("Contact : " + getValidString(client.getContactNo()));
-                    gender.setText("Gender : " + getValidString(client.getGender()));
-                    dob.setText("DOB : " + getValidString(client.getDob()));
-                    completed.setText(String.valueOf(client.getCompleted()));
-                    pending.setText(String.valueOf(client.getPending()));
-                    welcome.setText("Welcome , " + client.getFirstName());
-                    total.setText(String.valueOf(client.getTotal_jobs()));
-                    in_progress.setText(String.valueOf(client.getIn_progress()));
-
-                    // Handle profile image
-                    String profileImageBase64 = client.getProfileImage();
-                    if (profileImageBase64 != null && !profileImageBase64.isEmpty()) {
-                        try {
-                            byte[] decodedString = Base64.getDecoder().decode(profileImageBase64);
-                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            profileImage.setImageBitmap(decodedByte);
-                        } catch (IllegalArgumentException e) {
-                            Log.e("ProfileFragment", "Failed to decode Base64 string: " + e.getMessage());
-                            Toast.makeText(getContext(), "Failed to load profile image", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    progressBar.setVisibility(View.GONE);
-                    scroll.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "Profile data loaded successfully", Toast.LENGTH_SHORT).show();
+                User user = snapshot.getValue(User.class);
+                Log.d("hi",user.getFirstName());
+                if (user != null && isAdded()) {
+                    updateUI(user);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                handleDatabaseError(error);
             }
         });
     }
 
-    public void handleBackPress() {
-        // Handle the back press logic here
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            // If there are no more fragments in the back stack, let the Activity handle the back press
-            getActivity().onBackPressed();
+    private void updateUI(User user) {
+        name.setText(formatName(user.getFirstName(), user.getLastName()));
+        email.setText(formatField("Email", user.getEmail()));
+        mobile.setText(formatField("Contact", user.getContactNo()));
+        gender.setText(formatField("Gender", user.getGender()));
+        dob.setText(formatField("DOB", user.getDob()));
+
+        completed.setText(String.valueOf(user.getCompleted()));
+        pending.setText(String.valueOf(user.getPending()));
+        total.setText(String.valueOf(user.getTotal_jobs()));
+        in_progress.setText(String.valueOf(user.getIn_progress()));
+
+        welcome.setText(getWelcomeMessage(user.getFirstName()));
+        loadProfileImage(user.getProfileImage());
+
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private String formatName(String firstName, String lastName) {
+        return String.format("%s %s",
+                getValidString(firstName),
+                getValidString(lastName));
+    }
+
+    private String formatField(String label, String value) {
+        return String.format("%s: %s", label, getValidString(value));
+    }
+
+    private String getWelcomeMessage(String firstName) {
+        return String.format("Welcome, %s!", getValidString(firstName));
+    }
+
+    private void loadProfileImage(String base64Image) {
+        if (base64Image != null && !base64Image.isEmpty()) {
+            try {
+                byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                profileImage.setImageBitmap(decodedBitmap);
+            } catch (IllegalArgumentException e) {
+                       }
+        }
+    }
+
+    private void redirectToLogin() {
+        if (getActivity() != null) {
+            Toast.makeText(getContext(), "Authentication required", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), login.class));
+            getActivity().finish();
+        }
+    }
+
+    private void showDataNotFound() {
+        if (getActivity() != null) {
+            Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void handleDatabaseError(DatabaseError error) {
+        if (getActivity() != null) {
+            Toast.makeText(getContext(), "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     private String getValidString(String value) {
-        return value != null ? value : "N/A";
+        return (value != null && !value.isEmpty()) ? value : "N/A";
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Add authentication state listener
+        mAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove authentication state listener
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
+    private FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+            redirectToLogin();
+        }
+    };
 }

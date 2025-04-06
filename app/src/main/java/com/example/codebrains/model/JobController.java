@@ -11,7 +11,7 @@ public class JobController {
     private String additionalSkills;
     private String experienceLevel;
 
-    private double budget;
+    private String budget;
     private String deadline;
     private String attachments;
     private String additionalQuestions;
@@ -44,7 +44,7 @@ private String freelancer;
 
     // Parameterized constructor
     public JobController(String id, String username, String jobTitle, String jobCategory, String jobDescription,
-               String primarySkill, String additionalSkills, String experienceLevel, double budget,
+               String primarySkill, String additionalSkills, String experienceLevel, String budget,
                String deadline, String attachments, String additionalQuestions, String status,
                int noOfBidsReceived, String postedDate) {
         this.id = id;
@@ -148,11 +148,11 @@ private String freelancer;
         this.experienceLevel = experienceLevel;
     }
 
-    public double getBudget() {
+    public String getBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setBudget(String budget) {
         this.budget = budget;
     }
 

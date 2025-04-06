@@ -74,11 +74,14 @@ public class JobNotificationService extends Service {
                         for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
                             JobController job = jobSnapshot.getValue(JobController.class);
                             if (job != null) {
-                                if (job.getPostedTimestamp() > lastNotifiedTime && isJobMatching(jobSnapshot)) {
+                                // Ensure postedTimestamp is a long
+                                long postedTimestamp = job.getPostedTimestamp();
+
+                                if (postedTimestamp > lastNotifiedTime && isJobMatching(jobSnapshot)) {
                                     sendNotification(job);
                                     // Update the last notified time
                                     SharedPreferences.Editor editor = sp.edit();
-                                    editor.putLong(PREF_LAST_NOTIFIED_TIME, job.getPostedTimestamp());
+                                    editor.putLong(PREF_LAST_NOTIFIED_TIME, postedTimestamp);
                                     editor.apply();
                                 }
                             }
@@ -111,11 +114,8 @@ public class JobNotificationService extends Service {
     }
 
     private boolean isJobMatching(DataSnapshot snapshot) {
-        SharedPreferences sp = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String profession = sp.getString("profession", "");
         String developerSkills = sp.getString("developer_skills", "");
-
-        if (!profession.equals("Freelancer") || developerSkills == null || developerSkills.isEmpty()) {
+        if (developerSkills == null || developerSkills.isEmpty()) {
             return false;
         }
 
@@ -123,8 +123,11 @@ public class JobNotificationService extends Service {
         if (job == null) return false;
 
         String jobCategory = job.getJobCategory();
-        String[] skillsArray = developerSkills.split(",");
+        if (jobCategory == null || jobCategory.isEmpty()) {
+            return false;
+        }
 
+        String[] skillsArray = developerSkills.split(",");
         for (String skill : skillsArray) {
             if (jobCategory.equalsIgnoreCase(skill.trim())) {
                 return true;

@@ -40,7 +40,7 @@ public class JobItemAdapter extends RecyclerView.Adapter<JobItemAdapter.ViewHold
         holder.jobTitleText.setText(job.getJobTitle());
         holder.jobStatusText.setText(job.getStatus());
         holder.companyText.setText(job.getUsername());
-        holder.salaryText.setText(formatSalary(job.getBudget()));
+        holder.salaryText.setText(job.getBudget());
         holder.jobTypeText.setText(job.getExperienceLevel());
 
         // Handle skills
