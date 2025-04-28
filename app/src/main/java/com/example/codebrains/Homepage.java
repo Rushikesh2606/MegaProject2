@@ -98,6 +98,10 @@ public class Homepage extends AppCompatActivity {
                         .commit();
                 return true;
             }
+            else if (id == R.id.submitted) {
+                Intent i=new Intent(this, Submitted_job.class);
+                startActivity(i);
+            }
             else if (id == R.id.nav_contact_us) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment_content_homepage, new Contactus())

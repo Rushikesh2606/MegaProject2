@@ -31,6 +31,12 @@
         android:theme="@style/Theme.CodeBrains"
         tools:targetApi="31">
         <activity
+            android:name=".analyzer.RatedJobDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Submitted_job"
+            android:exported="false" />
+        <activity
             android:name=".JobListActivity"
             android:exported="false" />
         <activity

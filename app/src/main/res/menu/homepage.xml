@@ -23,6 +23,10 @@
         android:icon="@drawable/phone1"
         android:title="Contact Us" />
     <item
+        android:id="@+id/submitted"
+        android:icon="@drawable/logout_1"
+        android:title="Submitted Jobs" />
+    <item
         android:id="@+id/appLogOut"
         android:icon="@drawable/logout_1"
         android:title="Log Out" />
