@@ -9,6 +9,7 @@ import android.view.Menu;
 import com.example.codebrains.analyzer.pythoncode;
 import com.example.codebrains.freelancer.FindjobActivity;
 import com.example.codebrains.messaging.Chat;
+import com.example.codebrains.reevaluation.ReevaluationListActivity;
 import com.example.codebrains.services.FirebaseConnectionService;
 import com.example.codebrains.services.FirebaseProposalListenerService;
 import com.google.android.material.navigation.NavigationView;
@@ -87,7 +88,13 @@ startActivity(i);
                     Intent i=new Intent(Homepage_developer.this, Chat.class);
                     startActivity(i);
 
-                } else if (id == R.id.ContactUs) {
+                }
+             else if (id == R.id.reevaluation) {
+                Intent i=new Intent(Homepage_developer.this, ReevaluationListActivity.class);
+                startActivity(i);
+
+            }
+                else if (id == R.id.ContactUs) {
                     // Use the updated Contactus fragment with a no-argument constructor.
                     Contactus contactusFragment = new Contactus();
                     getSupportFragmentManager().beginTransaction()

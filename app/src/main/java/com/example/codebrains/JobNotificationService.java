@@ -13,27 +13,26 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 
 import com.example.codebrains.model.JobController;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.codebrains.model.Reevaluation;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 
 public class JobNotificationService extends Service {
     private static final String CHANNEL_ID = "JobNotifications";
-    private static final long CHECK_INTERVAL = 5000; // 5 seconds
+    private static final long CHECK_INTERVAL = 5000;
     private static final String TAG = "JobNotificationService";
-    private static final String PREF_LAST_NOTIFIED_TIME = "last_notified_time";
+    private static final String PREF_LAST_NOTIFIED_JOB_TIME = "last_notified_job_time";
+    private static final String PREF_LAST_NOTIFIED_REEVAL_TIME = "last_notified_reeval_time";
 
     private Handler handler;
-    private Runnable checkJobsRunnable;
+    private Runnable checkRunnable;
     private SharedPreferences sp;
+    private String currentUserId;
 
     @Override
     public void onCreate() {
@@ -42,6 +41,14 @@ public class JobNotificationService extends Service {
 
         sp = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String profession = sp.getString("profession", "");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            currentUserId = user.getUid();
+        } else {
+            stopSelf();
+            return;
+        }
 
         if (profession.equals("Freelancer")) {
             initializePeriodicChecks();
@@ -53,19 +60,20 @@ public class JobNotificationService extends Service {
     private void initializePeriodicChecks() {
         handler = new Handler(Looper.getMainLooper());
 
-        checkJobsRunnable = new Runnable() {
+        checkRunnable = new Runnable() {
             @Override
             public void run() {
                 checkForNewJobs();
+                checkForNewReevaluations();
                 handler.postDelayed(this, CHECK_INTERVAL);
             }
         };
 
-        handler.post(checkJobsRunnable);
+        handler.post(checkRunnable);
     }
 
     private void checkForNewJobs() {
-        long lastNotifiedTime = sp.getLong(PREF_LAST_NOTIFIED_TIME, 0);
+        long lastTime = sp.getLong(PREF_LAST_NOTIFIED_JOB_TIME, 0);
 
         FirebaseDatabase.getInstance().getReference("jobs")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -73,76 +81,77 @@ public class JobNotificationService extends Service {
                     public void onDataChange(DataSnapshot snapshot) {
                         for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
                             JobController job = jobSnapshot.getValue(JobController.class);
-                            if (job != null) {
-                                // Ensure postedTimestamp is a long
-                                long postedTimestamp = job.getPostedTimestamp();
+                            if (job != null && job.getPostedTimestamp() > lastTime && isJobMatching(jobSnapshot)) {
+                                sendJobNotification(job);
 
-                                if (postedTimestamp > lastNotifiedTime && isJobMatching(jobSnapshot)) {
-                                    sendNotification(job);
-                                    // Update the last notified time
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    editor.putLong(PREF_LAST_NOTIFIED_TIME, postedTimestamp);
-                                    editor.apply();
-                                }
+                                sp.edit()
+                                        .putLong(PREF_LAST_NOTIFIED_JOB_TIME, job.getPostedTimestamp())
+                                        .apply();
                             }
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-                        Log.e(TAG, "Database error: " + error.getMessage());
+                        Log.e(TAG, "Error loading jobs: " + error.getMessage());
                     }
                 });
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Job Notifications",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.enableLights(true);
-            channel.setLightColor(getResources().getColor(android.R.color.holo_blue_light));
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
-        }
+    private void checkForNewReevaluations() {
+        long lastTime = sp.getLong(PREF_LAST_NOTIFIED_REEVAL_TIME, 0);
+
+        FirebaseDatabase.getInstance().getReference("Reevaluated")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        for (DataSnapshot reevalSnapshot : snapshot.getChildren()) {
+                            Reevaluation reevaluation = reevalSnapshot.getValue(Reevaluation.class);
+                            if (reevaluation == null) continue;
+
+                            long timestamp = reevaluation.getTimestamp();
+                            String freelancerId = reevaluation.getFreelancer();
+
+                            if (timestamp > lastTime && currentUserId.equals(freelancerId)) {
+                                sendReevaluationNotification(reevaluation);
+
+                                sp.edit()
+                                        .putLong(PREF_LAST_NOTIFIED_REEVAL_TIME, timestamp)
+                                        .apply();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e(TAG, "Error loading reevaluations: " + error.getMessage());
+                    }
+                });
     }
 
     private boolean isJobMatching(DataSnapshot snapshot) {
         String developerSkills = sp.getString("developer_skills", "");
-        if (developerSkills == null || developerSkills.isEmpty()) {
-            return false;
-        }
+        if (developerSkills == null || developerSkills.isEmpty()) return false;
 
         JobController job = snapshot.getValue(JobController.class);
-        if (job == null) return false;
-
-        String jobCategory = job.getJobCategory();
-        if (jobCategory == null || jobCategory.isEmpty()) {
-            return false;
-        }
+        if (job == null || job.getJobCategory() == null) return false;
 
         String[] skillsArray = developerSkills.split(",");
         for (String skill : skillsArray) {
-            if (jobCategory.equalsIgnoreCase(skill.trim())) {
+            if (job.getJobCategory().equalsIgnoreCase(skill.trim())) {
                 return true;
             }
         }
         return false;
     }
 
-    private void sendNotification(JobController job) {
+    private void sendJobNotification(JobController job) {
         Intent intent = new Intent(this, Homepage_developer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("New Job Posted!")
+                .setContentTitle("New Job Available!")
                 .setContentText(job.getJobTitle() + " - " + job.getJobCategory())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
@@ -160,6 +169,44 @@ public class JobNotificationService extends Service {
         }
     }
 
+    private void sendReevaluationNotification(Reevaluation reevaluation) {
+        Intent intent = new Intent(this, Homepage_developer.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("You’ve been Re-evaluated!")
+                .setContentText("Reason: " + reevaluation.getReason())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setColor(getResources().getColor(android.R.color.holo_blue_dark))
+                .build();
+
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        if (manager != null) {
+            manager.notify((int) System.currentTimeMillis(), notification);
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID, "Job Notifications", NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -169,7 +216,7 @@ public class JobNotificationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (handler != null) {
-            handler.removeCallbacks(checkJobsRunnable);
+            handler.removeCallbacks(checkRunnable);
         }
     }
 }

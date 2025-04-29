@@ -31,6 +31,12 @@
         android:theme="@style/Theme.CodeBrains"
         tools:targetApi="31">
         <activity
+            android:name=".reevaluation.ReevaluationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".reevaluation.ReevaluationListActivity"
+            android:exported="false" />
+        <activity
             android:name=".analyzer.RatedJobDetailsActivity"
             android:exported="false" />
         <activity

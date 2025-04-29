@@ -228,48 +228,62 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
     }
 
     private void showReEvaluationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Request Re-evaluation");
-
-        final EditText input = new EditText(this);
-        input.setHint("Enter reason for re-evaluation...");
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        builder.setView(input);
-
-        builder.setPositiveButton("Submit", (dialog, which) -> {
-            String reevaluationReason = input.getText().toString().trim();
-            if (reevaluationReason.isEmpty()) {
-                Toast.makeText(this, "Please enter a reason for re-evaluation.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Generate a unique ID for the reevaluation
-            String reevaluationId = reEvaluationsRef.push().getKey(); // Generate a unique ID
-
-            if (reevaluationId != null) {
-                // Get current timestamp
-                long currentTimestamp = System.currentTimeMillis();
-
-                // Create a new Reevaluation object
-                Reevaluation reevaluation = new Reevaluation(reevaluationId, true, currentTimestamp, reevaluationReason);
-
-                // Save the reevaluation request to Firebase under ReEvaluations node
-                reEvaluationsRef.child(reevaluationId).setValue(reevaluation)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(this, "Re-evaluation request submitted successfully!", Toast.LENGTH_SHORT).show();
-                            // Optionally, you can show the new reevaluation or perform any other actions
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(this, "Failed to submit re-evaluation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
+        reEvaluationsRef.orderByChild("jobId").equalTo(jobId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                // Reevaluation already exists
+                Toast.makeText(this, "A re-evaluation request already exists for this job.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Failed to generate reevaluation ID.", Toast.LENGTH_SHORT).show();
+                // No reevaluation yet, show dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Request Re-evaluation");
+
+                final EditText input = new EditText(this);
+                input.setHint("Enter reason for re-evaluation...");
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                builder.setView(input);
+
+                builder.setPositiveButton("Submit", (dialog, which) -> {
+                    String reevaluationReason = input.getText().toString().trim();
+                    if (reevaluationReason.isEmpty()) {
+                        Toast.makeText(this, "Please enter a reason for re-evaluation.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String reevaluationId = reEvaluationsRef.push().getKey();
+                    if (reevaluationId != null) {
+                        long currentTimestamp = System.currentTimeMillis();
+
+                        Reevaluation reevaluation = new Reevaluation(
+                                reevaluationId,
+                                true,
+                                currentTimestamp,
+                                reevaluationReason,
+                                freelancerId,
+                                jobId,
+                                feedback
+                        );
+
+                        reEvaluationsRef.child(reevaluationId).setValue(reevaluation)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "Re-evaluation request submitted successfully!", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, "Failed to submit re-evaluation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        Toast.makeText(this, "Failed to generate reevaluation ID.", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                builder.show();
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Reevaluation is already submitted..!!" , Toast.LENGTH_SHORT).show();
         });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        builder.show();
     }
+
+
 
 }
