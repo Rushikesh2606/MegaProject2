@@ -58,4 +58,17 @@
 
     <string name="job_header_image_desc">Header image showing available job opportunities</string>
 
+
+    <string name="job_details">Job Details</string>
+    <string name="freelancer_info">Freelancer Information</string>
+    <string name="additional_info">Additional Information</string>
+    <string name="id_label">ID:</string>
+    <string name="job_id_label">Job ID:</string>
+    <string name="reason_label">Reason</string>
+    <string name="analyzer_label">Analyzer</string>
+    <string name="status_label">Status</string>
+    <string name="timestamp_label">Timestamp</string>
+    <string name="update_status">Update Status</string>
+    <string name="header_image_description">Job header image</string>
+
 </resources>
