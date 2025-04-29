@@ -44,6 +44,7 @@ public class JobDetailsFragment extends Fragment {
 
     // Progress bar for file conversion
     private View progressBar;
+
     DatabaseReference databaseReference;
 
     // Uri for the selected file

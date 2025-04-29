@@ -7,6 +7,7 @@ public class Connection {
     private String jobId;
     private String status;
     long timeStamp;
+    private boolean hired;
 
     public long getTimeStamp() {
         return timeStamp;
@@ -67,5 +68,13 @@ public class Connection {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isHired() {
+        return hired;
+    }
+
+    public void setHired(boolean hired) {
+        this.hired = hired;
     }
 }

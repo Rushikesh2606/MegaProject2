@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    android:padding="16dp">
+    android:background="#fff">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:padding="16dp"
+        android:gravity="center_horizontal">
 
         <!-- Title -->
         <TextView
@@ -21,7 +21,7 @@
             android:textColor="#000"
             android:textSize="20sp"
             android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="24dp" />
 
         <!-- Languages Spoken -->
         <com.google.android.material.textfield.TextInputLayout
@@ -36,16 +36,13 @@
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-
-
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/languages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textColorHint="#000" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Resume Upload -->
@@ -54,33 +51,35 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
 
             <TextView
                 android:id="@+id/resume_uploaded"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Resume Upload"
-                android:textColor="#000000"
-                android:layout_marginEnd="8dp" />
+                android:textColor="#000000" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/resume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Choose File"
-                android:backgroundTint="#1EB980"
-                android:textColor="#fff"
-                android:layout_marginStart="40dp" />
+                app:backgroundTint="#1EB980"
+                app:cornerRadius="8dp"
+                android:textColor="#fff" />
 
             <TextView
                 android:id="@+id/file_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
+                android:layout_weight="1"
                 android:textColor="#000000"
-                android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:maxLines="1"
+                android:ellipsize="end" />
         </LinearLayout>
 
         <!-- Availability Status -->
@@ -96,13 +95,12 @@
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/availability_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Degree/Program Name -->
@@ -118,14 +116,13 @@
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/degree"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textColorHint="#000" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Institute Name -->
@@ -141,14 +138,13 @@
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/institute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textColorHint="#000" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Graduation Year -->
@@ -164,15 +160,15 @@
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="24dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:inputType="number"
-                android:textColor="#000000"
-                android:textColorHint="#000" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Submit Button -->
@@ -181,8 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit"
-            android:backgroundTint="#1EB980"
-            android:textColor="#fff"
-            android:padding="12dp" />
+            app:backgroundTint="#1EB980"
+            android:textColor="#fff" />
     </LinearLayout>
 </ScrollView>

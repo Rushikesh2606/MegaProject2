@@ -40,26 +40,7 @@
             android:background="#E0F2E9"
             android:layout_marginBottom="24dp"/>
 
-        <!-- Payment Amount Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Amount"
-            android:textSize="16sp"
-            android:textColor="#1A7559"
-            android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="8dp"/>
 
-        <TextView
-            android:id="@+id/payment_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="$99.99"
-            android:textSize="28sp"
-            android:textColor="#1EB980"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
 
         <!-- Card Input Section -->
         <TextView
@@ -115,46 +96,6 @@
             app:cardTint="#1EB980"/>
 
         <!-- Billing Information Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Billing Information"
-            android:textSize="16sp"
-            android:textColor="#1A7559"
-            android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="8dp"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="Cardholder Name"
-            app:startIconDrawable="@drawable/ic_person"
-            app:startIconTint="#1EB980"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cardholder_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Billing ZIP/Postal Code"
-            app:startIconDrawable="@drawable/ic_location"
-            app:startIconTint="#1EB980"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/billing_zip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPostalAddress"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Security Section -->
         <TextView
@@ -219,7 +160,7 @@
 
         <!-- Payment Button -->
         <Button
-            android:id="@+id/btnPay"
+            android:id="@+id/btnPay1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -229,6 +170,7 @@
             android:fontFamily="sans-serif-medium"
             android:padding="12dp"
             android:elevation="4dp"
+            android:onClick="successpayment"
             android:backgroundTint="#1EB980"/>
 
         <!-- Payment Methods -->
@@ -265,6 +207,10 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_amex"
                 android:layout_marginEnd="8dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnPay"/>
         </LinearLayout>
 
     </LinearLayout>

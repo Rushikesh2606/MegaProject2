@@ -27,6 +27,10 @@
         android:icon="@drawable/logout_1"
         android:title="Submitted Jobs" />
     <item
+        android:id="@+id/In_progress"
+
+        android:title="Inprogress Job" />
+    <item
         android:id="@+id/appLogOut"
         android:icon="@drawable/logout_1"
         android:title="Log Out" />

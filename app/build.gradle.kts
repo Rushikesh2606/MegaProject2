@@ -89,7 +89,8 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
 
-    // Kotlin extensions
+
+    // Kotin extensions
     implementation("androidx.activity:activity-ktx:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.5.5")
     implementation("androidx.core:core-ktx:1.3.2")

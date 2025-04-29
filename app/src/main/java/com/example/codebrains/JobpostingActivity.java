@@ -56,7 +56,7 @@ public class JobpostingActivity extends AppCompatActivity {
         }
 
         // Setup Spinner for Experience Level
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Spinner spinner = findViewById(R.id.experience_level);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress", "WrongViewCast"}) Spinner spinner = findViewById(R.id.experience_level);
         if (spinner != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                     R.array.experience_levels_array, android.R.layout.simple_spinner_item);

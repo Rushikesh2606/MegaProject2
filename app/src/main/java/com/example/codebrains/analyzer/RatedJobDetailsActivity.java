@@ -24,20 +24,19 @@ import androidx.core.content.FileProvider;
 
 import com.example.codebrains.R;
 import com.example.codebrains.model.Reevaluation;
+import com.example.codebrains.payment1;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 public class RatedJobDetailsActivity extends AppCompatActivity {
-
     private static final int STORAGE_PERMISSION_CODE = 1001;
 
     private TextView titleTextView, descriptionTextView;
-    private Button approveButton, reEvaluationButton, downloadButton;
-    private String jobId, downloadUrl, feedback, rated_job_id, freelancerId;
+    private Button approveButton, reEvaluationButton, downloadButton, paymentButton;
+    private String jobId, downloadUrl, feedback, rated_job_id, freelancerId, amount;
     private float rating;
     private DatabaseReference ratedJobsRef, jobsRef, freelancerRef, reEvaluationsRef;
     private float userNewRating = 0;
@@ -47,30 +46,45 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rated_job_details);
 
+        // Initialize UI components
         titleTextView = findViewById(R.id.titleTextView);
         descriptionTextView = findViewById(R.id.descriptionTextView);
         approveButton = findViewById(R.id.approveButton);
         reEvaluationButton = findViewById(R.id.reEvaluationButton);
         downloadButton = findViewById(R.id.downloadButton);
+        paymentButton = findViewById(R.id.PaymentButton);
 
+        // Set initial visibility states
         downloadButton.setVisibility(Button.GONE);
+        paymentButton.setVisibility(Button.GONE);
 
+        // Get intent extras
         jobId = getIntent().getStringExtra("jobId");
         rated_job_id = getIntent().getStringExtra("rated_job_id");
 
+        // Initialize Firebase references
         ratedJobsRef = FirebaseDatabase.getInstance().getReference("Rated_jobs");
         jobsRef = FirebaseDatabase.getInstance().getReference("jobs");
         freelancerRef = FirebaseDatabase.getInstance().getReference("freelancer");
         reEvaluationsRef = FirebaseDatabase.getInstance().getReference("ReEvaluations");
 
         fetchRatedJobDetails();
+
+        // Approve Button Click Listener
         approveButton.setOnClickListener(v -> {
             downloadButton.setVisibility(Button.VISIBLE);
+            paymentButton.setVisibility(Button.VISIBLE);
             Toast.makeText(this, "You approved the submission!", Toast.LENGTH_SHORT).show();
         });
 
-        reEvaluationButton.setOnClickListener(v -> showReEvaluationDialog());
+        // Re-evaluation Button Click Listener
+        reEvaluationButton.setOnClickListener(v -> {
+            downloadButton.setVisibility(Button.GONE);
+            paymentButton.setVisibility(Button.GONE);
+            showReEvaluationDialog();
+        });
 
+        // Download Button Click Listener
         downloadButton.setOnClickListener(v -> {
             if (downloadUrl != null && !downloadUrl.isEmpty()) {
                 if (checkStoragePermission()) {
@@ -82,6 +96,14 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Download URL not available", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Payment Button Click Listener
+        paymentButton.setOnClickListener(v -> {
+            Intent intent = new Intent(RatedJobDetailsActivity.this, payment1.class);
+            intent.putExtra("freelancerContactNo", freelancerId);
+            intent.putExtra("amount", amount);
+            startActivity(intent);
+        });
     }
 
     private void fetchRatedJobDetails() {
@@ -89,8 +111,9 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
             if (snapshot.exists()) {
                 String title = snapshot.child("jobTitle").getValue(String.class);
                 feedback = snapshot.child("feedback").getValue(String.class);
-                downloadUrl = snapshot.child("zip").getValue(String.class); // base64 string
+                downloadUrl = snapshot.child("zip").getValue(String.class);
                 freelancerId = snapshot.child("freelancer").getValue(String.class);
+                amount = snapshot.child("budget").getValue(String.class);
                 try {
                     rating = snapshot.child("rating").getValue(Float.class);
                 } catch (Exception e) {
@@ -104,136 +127,11 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void startDownload() {
-        if (downloadUrl == null || downloadUrl.isEmpty()) {
-            Toast.makeText(this, "Download data not available.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            byte[] zipBytes = Base64.decode(downloadUrl, Base64.DEFAULT);
-
-            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            if (!downloadsDir.exists()) {
-                downloadsDir.mkdirs();
-            }
-
-            File zipFile = new File(downloadsDir, "submission_downloaded.zip");
-
-            FileOutputStream fos = new FileOutputStream(zipFile);
-            fos.write(zipBytes);
-            fos.flush();
-            fos.close();
-
-            Toast.makeText(this, "ZIP File downloaded successfully!", Toast.LENGTH_SHORT).show();
-
-            openZipFile(zipFile);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to decode and save ZIP file.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void showRatingDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Rate the Developer");
-
-        RatingBar ratingBar = new RatingBar(this);
-        ratingBar.setNumStars(5);
-        ratingBar.setStepSize(1.0f);
-        builder.setView(ratingBar);
-
-        builder.setPositiveButton("Submit", (dialog, which) -> {
-            userNewRating = ratingBar.getRating();
-            startDownload();
-            updateDeveloperRating();
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        builder.show();
-    }
-
-    private void openZipFile(File zipFile) {
-        Uri fileUri;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            fileUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", zipFile);
-        } else {
-            fileUri = Uri.fromFile(zipFile);
-        }
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(fileUri, "application/zip");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(intent, "Open ZIP file"));
-    }
-
-    private void updateDeveloperRating() {
-        if (freelancerId != null) {
-            freelancerRef.child(freelancerId).get().addOnSuccessListener(snapshot -> {
-                if (snapshot.exists()) {
-                    Float oldRating = snapshot.child("rating").getValue(Float.class);
-                    if (oldRating == null) oldRating = 0f;
-                    float firstRating = (rating + oldRating) / 2;
-                    float finalRating = (firstRating + userNewRating) / 2;
-
-                    freelancerRef.child(freelancerId).child("rating").setValue(finalRating)
-                            .addOnSuccessListener(aVoid -> {
-                                ratedJobsRef.child(rated_job_id).removeValue();
-                                Toast.makeText(this, "Rating updated successfully!", Toast.LENGTH_SHORT).show();
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Failed to update rating.", Toast.LENGTH_SHORT).show();
-                            });
-
-                } else {
-                    Toast.makeText(this, "Freelancer not found.", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to fetch freelancer details.", Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            Toast.makeText(this, "Freelancer ID not found.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean checkStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return true;
-        } else {
-            int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            return result == PackageManager.PERMISSION_GRANTED;
-        }
-    }
-
-    private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                STORAGE_PERMISSION_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showRatingDialog();
-            } else {
-                Toast.makeText(this, "Storage Permission Denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     private void showReEvaluationDialog() {
         reEvaluationsRef.orderByChild("jobId").equalTo(jobId).get().addOnSuccessListener(snapshot -> {
             if (snapshot.exists()) {
-                // Reevaluation already exists
                 Toast.makeText(this, "A re-evaluation request already exists for this job.", Toast.LENGTH_LONG).show();
             } else {
-                // No reevaluation yet, show dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Request Re-evaluation");
 
@@ -270,20 +168,98 @@ public class RatedJobDetailsActivity extends AppCompatActivity {
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(this, "Failed to submit re-evaluation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
-                    } else {
-                        Toast.makeText(this, "Failed to generate reevaluation ID.", Toast.LENGTH_SHORT).show();
                     }
-
                 });
 
                 builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
                 builder.show();
             }
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Reevaluation is already submitted..!!" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error checking re-evaluation status", Toast.LENGTH_SHORT).show();
         });
     }
 
+    private void showRatingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rate the Developer");
 
+        RatingBar ratingBar = new RatingBar(this);
+        ratingBar.setNumStars(5);
+        ratingBar.setStepSize(1.0f);
+        builder.setView(ratingBar);
 
+        builder.setPositiveButton("Submit", (dialog, which) -> {
+            userNewRating = ratingBar.getRating();
+            startDownload();
+            updateDeveloperRating();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void startDownload() {
+        try {
+            byte[] zipBytes = Base64.decode(downloadUrl, Base64.DEFAULT);
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File zipFile = new File(downloadsDir, "submission_" + System.currentTimeMillis() + ".zip");
+
+            try (FileOutputStream fos = new FileOutputStream(zipFile)) {
+                fos.write(zipBytes);
+                Toast.makeText(this, "ZIP file downloaded successfully!", Toast.LENGTH_SHORT).show();
+                openZipFile(zipFile);
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "File download failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openZipFile(File zipFile) {
+        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", zipFile);
+        Intent intent = new Intent(Intent.ACTION_VIEW)
+                .setDataAndType(uri, "application/zip")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(intent, "Open ZIP file"));
+    }
+
+    private void updateDeveloperRating() {
+        freelancerRef.child(freelancerId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                Float currentRating = snapshot.child("rating").getValue(Float.class);
+                float newRating = currentRating != null ?
+                        (currentRating + userNewRating) / 2 :
+                        userNewRating;
+
+                freelancerRef.child(freelancerId).child("rating").setValue(newRating)
+                        .addOnSuccessListener(aVoid -> {
+                            ratedJobsRef.child(rated_job_id).removeValue();
+                            finish();
+                        });
+            }
+        });
+    }
+
+    private boolean checkStoragePermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showRatingDialog();
+            } else {
+                Toast.makeText(this, "Storage permission required for downloads", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

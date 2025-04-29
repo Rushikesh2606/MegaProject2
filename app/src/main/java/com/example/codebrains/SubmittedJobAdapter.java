@@ -44,8 +44,7 @@ public class SubmittedJobAdapter extends RecyclerView.Adapter<SubmittedJobAdapte
         public ViewHolder(View view) {
             super(view);
             tvTitle = view.findViewById(R.id.textViewTitle);
-            tvDescription = view.findViewById(R.id.textViewDescription);
-            btnDownload = view.findViewById(R.id.buttonDownload);
+            tvDescription = view.findViewById(R.id.textViewDescription);btnDownload = view.findViewById(R.id.buttonDownload);
         }
     }
 

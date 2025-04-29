@@ -34,12 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search reevaluations..." />
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Main recycler view with improved styling -->
@@ -121,14 +115,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonAddReevaluation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add New Reevaluation"
-            android:backgroundTint="@color/green"
-            app:cornerRadius="8dp" />
     </LinearLayout>
 
     <!-- Floating action button for quick actions -->
